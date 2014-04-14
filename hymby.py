@@ -103,6 +103,6 @@ def item(name='Untitled'):
         content = sf.read()
         sf.close()
     details = item_data(name)
-    return template('<h3>%s</h3>\n<p>%s</p>' % (details.get('TITLE', ''), content), name=name)
+    return template('item.tpl', content=content, name=details.get('TITLE', ''), title=details.get('TITLE', ''))
 
 hymby.run(host='localhost', port=8080, debug=True)
