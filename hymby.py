@@ -12,6 +12,7 @@ def install():
     '''
     Launch the installation procedure
     '''
+    # TODO: if not hymby.CONFIG, check config file to initialize variable or do /install
     content = '<p>TODO: Perform installation</p>'
     if hymby.CONFIG and hymby.CONFIG.get('engine', False):
         content = '<p>Already installed. <a href="/items">List items</a></p>'
@@ -69,6 +70,7 @@ def check_config_file():
 
 @hymby.route('/items')
 def homepage():
+    # TODO: if not hymby.CONFIG, check config file to initialize variable or do /install
     res = '<h3>List</h3>'
     db_path = hymby.CONFIG.get('path', '') + '/' + 'db' + '/'
     files = dblist(db_path, hymby.dbfiles_extension)
@@ -80,6 +82,10 @@ def error404(error):
 
 @hymby.route('/item/<name>')
 def item(name='Untitled'):
+    '''
+    Display content of given post (name)
+    '''
+    # TODO: if not hymby.CONFIG, check config file to initialize variable or do /install
     # TODO: return to homepage or give a redirection to /items if name == Untitled
     if name == 'Untitled':
         return HTTPError(404)
@@ -95,6 +101,11 @@ def item(name='Untitled'):
         content = sf.read()
         sf.close()
     details = item_data(name)
+    try:
+        mdwn = __import__('markdown')
+        content = mdwn.markdown(content)
+    except ImportError as e:
+        content = 'python-markdown is missing!'
     return template('item.tpl', content=content, name=details.get('TITLE', ''), title=details.get('TITLE', ''))
 
 hymby.run(host='localhost', port=8080, debug=True)
