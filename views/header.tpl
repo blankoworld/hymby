@@ -5,7 +5,7 @@
   <meta name="robot" content="noindex, nofollow" />
   <meta name="generator" content="Hymby">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Hymby - </title>
+  <title>Hymby - {{ title }}</title>
   <meta name="viewport" content="width=device-width">
   <style>
   html, body {
@@ -87,9 +87,9 @@
 
   <aside id="navigation">
     <ol>
-      <li><a href="?home">Homepage</a></li>
-      <li><a href="?list">List</a></li>
-      <li><a href="?config">Configuration</a></li>
+      <li><a href="/">Homepage</a></li>
+      <li><a href="/items">List</a></li>
+      <li><a href="/config">Configuration</a></li>
     </ol>
   </aside>
 

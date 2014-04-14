@@ -57,7 +57,7 @@ def check_config_file():
     # TODO: read configuration file and fill in "hymby.CONFIG" variable with result
     hymby.CONFIG.update({
         'engine': 'makefly',
-        'path': './host_engine',
+        'path': './hosted_engine',
     })
     # TODO: Check if engine module exists regarding the configuration file ('engine' variable)
     # If not, launch /install procedure
@@ -70,16 +70,17 @@ def check_config_file():
 @hymby.route('/items')
 def homepage():
     res = '<h3>List</h3>'
-    files = dblist('./db', hymby.dbfiles_extension)
+    db_path = hymby.CONFIG.get('path', '') + '/' + 'db' + '/'
+    files = dblist(db_path, hymby.dbfiles_extension)
     if files:
         res += '<ul>\n'
     for f in files:
-        f_data = item_data('./db/' + f)
+        f_data = item_data(db_path + f)
         item_title = f_data.get('TITLE', 'Untitled')
         res += '  <li><a href="/item/%s" alt="Read %s">%s</a></li>' % (f, item_title, item_title)
     if files:
         res += '</ul>'
-    return res
+    return template('items', content=res)
 
 @hymby.error(404)
 def error404(error):
@@ -95,7 +96,7 @@ def item(name='Untitled'):
     source_file = ''
     if matching:
         print matching
-        source_file = './src/' + matching.groups()[1] + '.md'
+        source_file = hymby.CONFIG.get('path', '') + '/src/' + matching.groups()[1] + '.md'
     content = ''
     if source_file:
         sf = open(source_file, 'r')
