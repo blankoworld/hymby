@@ -72,15 +72,7 @@ def homepage():
     res = '<h3>List</h3>'
     db_path = hymby.CONFIG.get('path', '') + '/' + 'db' + '/'
     files = dblist(db_path, hymby.dbfiles_extension)
-    if files:
-        res += '<ul>\n'
-    for f in files:
-        f_data = item_data(db_path + f)
-        item_title = f_data.get('TITLE', 'Untitled')
-        res += '  <li><a href="/item/%s" alt="Read %s">%s</a></li>' % (f, item_title, item_title)
-    if files:
-        res += '</ul>'
-    return template('items', content=res)
+    return template('items', items=[(x, item_data(db_path + x)) for x in files])
 
 @hymby.error(404)
 def error404(error):
