@@ -1,10 +1,21 @@
-from bottle import Bottle, route, run, template
+from bottle import Bottle, route, run, template, redirect
 from os import listdir, path
 from re import sub, compile as recompile
 
 hymby = Bottle()
 hymby.DBFILES = []
 hymby.dbfiles_extension = '.mk'
+hymby.CONFIG = {}
+
+@hymby.route('/install')
+def install():
+    '''
+    Launch the installation procedure
+    '''
+    content = '<p>TODO: Perform installation</p>'
+    if hymby.CONFIG and hymby.CONFIG.get('engine', False):
+        content = '<p>Already installed. <a href="/items">List items</a></p>'
+    return '<h3>Installation</h3>' + content
 
 def dblist(path, extension):
     '''
@@ -39,6 +50,24 @@ def item_data(filepath):
     return variables
 
 @hymby.route('/')
+def check_config_file():
+    # TODO: Check if configuration file exists (make a global variable with the name of the configuration file).
+    #+ If not, launch /install procedure
+    #+ If exist, read configuration file
+    # TODO: read configuration file and fill in "hymby.CONFIG" variable with result
+    hymby.CONFIG.update({
+        'engine': 'makefly',
+        'path': './host_engine',
+    })
+    # TODO: Check if engine module exists regarding the configuration file ('engine' variable)
+    # If not, launch /install procedure
+    # TODO: Check if blog exists regarding the configuration file ('path' variable)
+    #+ If not, launch /install procedure
+
+    # If all is OK, read configuratigo to the webadmin panel (list of items)
+    redirect('/items')
+
+@hymby.route('/items')
 def homepage():
     res = '<h3>List</h3>'
     files = dblist('./db', hymby.dbfiles_extension)
