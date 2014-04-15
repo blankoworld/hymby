@@ -7,17 +7,6 @@ hymby.DBFILES = []
 hymby.dbfiles_extension = '.mk'
 hymby.CONFIG = {}
 
-@hymby.route('/install')
-def install():
-    '''
-    Launch the installation procedure
-    '''
-    # TODO: if not hymby.CONFIG, check config file to initialize variable or do /install
-    content = '<p>TODO: Perform installation</p>'
-    if hymby.CONFIG and hymby.CONFIG.get('engine', False):
-        content = '<p>Already installed. <a href="/items">List items</a></p>'
-    return '<h3>Installation</h3>' + content
-
 def dblist(path, extension):
     '''
     Return list of item from the DB
@@ -34,6 +23,12 @@ def dblist(path, extension):
     return files
 
 def item_data(filepath):
+    '''
+    Read meta data from files in the given path.
+    The format is:
+        variable = content
+    Also delete whitespace at beginning and end of variable and content.
+    '''
     variables = {}
     if path.exists(filepath):
         with open(filepath, 'r') as f:
@@ -50,8 +45,22 @@ def item_data(filepath):
             f.close()
     return variables
 
+@hymby.route('/install')
+def install():
+    '''
+    Launch the installation procedure
+    '''
+    # TODO: if not hymby.CONFIG, check config file to initialize variable or do /install
+    content = '<p>TODO: Perform installation</p>'
+    if hymby.CONFIG and hymby.CONFIG.get('engine', False):
+        content = '<p>Already installed. <a href="/items">List items</a></p>'
+    return '<h3>Installation</h3>' + content
+
 @hymby.route('/')
 def check_config_file():
+    '''
+    Check configuration file then redirect to the items list
+    '''
     # TODO: Check if configuration file exists (make a global variable with the name of the configuration file).
     #+ If not, launch /install procedure
     #+ If exist, read configuration file
@@ -70,6 +79,9 @@ def check_config_file():
 
 @hymby.route('/items')
 def homepage():
+    '''
+    List of items
+    '''
     # TODO: if not hymby.CONFIG, check config file to initialize variable or do /install
     res = '<h3>List</h3>'
     db_path = hymby.CONFIG.get('path', '') + '/' + 'db' + '/'
@@ -78,6 +90,11 @@ def homepage():
 
 @hymby.route('/items/new')
 def new_item(method='GET'):
+    '''
+    New item creation page.
+    If no data, get form view.
+    If data given, add the new item.
+    '''
     if request.GET.get('save', '').strip():
         name = request.GET.get('name', '').strip()
         # TODO: fetch info
@@ -115,6 +132,9 @@ def item(name='Untitled'):
 
 @hymby.error(404)
 def error404(error):
+    '''
+    Default 404 page.
+    '''
     return 'Nothing here! Try this: <a href="/">Homepage</a>'
 
 hymby.run(host='localhost', port=8080, debug=True)
