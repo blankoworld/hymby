@@ -1,0 +1,3 @@
+[general]
+engine: makefly
+path: ./hosted_engine

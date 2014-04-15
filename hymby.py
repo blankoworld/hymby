@@ -1,11 +1,62 @@
 from bottle import Bottle, route, run, template, redirect, request
 from os import listdir, path
 from re import sub, compile as recompile
+from ConfigParser import SafeConfigParser as ConfigParser
 
 hymby = Bottle()
+hymby.config = {}
+# General configuration
+general_config = {
+    'filename': 'hymbyrc',
+    'checked': False
+}
+hymby.config.update(general_config)
+
+# Makefly default configuration
+makefly_config = {
+    'makefly.db_extension': '.mk',
+    'makefly.src_extension': '.md',
+    'makefly.db_directory': 'db',
+    'makefly.src_directory': 'src',
+}
+hymby.config.update(makefly_config)
+
+# Useful info
 hymby.DBFILES = []
-hymby.dbfiles_extension = '.mk'
-hymby.CONFIG = {}
+
+def check_config():
+    '''
+    Check that configuration file exist regarding hymby.config['filename'] variable.
+    If not: go to the installation page to create the file.
+    '''
+    # if configuration file exists and hymby.config filled in, nothing to do
+    if path.exists(hymby.config['filename']) and hymby.config.get('checked', False) and path.exists(hymby.config.get('path', False)):
+        return True
+    # Check if configuration file exists.
+    #+ If not, launch /install procedure
+    #+ If exist, read configuration file
+    if not path.exists(hymby.config['filename']):
+        # TODO: Add a param to inform why we launch installation
+        redirect('/install')
+
+    # Read configuration file
+    conf = ConfigParser()
+    conf.read(hymby.config['filename'])
+    for section in conf.sections():
+        for key, value in conf.items(section):
+            key = section + '.' + key
+        hymby.config.update({key: value})
+    hymby.config.update({'checked': True}) # Configuration checked
+
+    # TODO: Check if engine module exists regarding the configuration file ('engine' variable)
+    # If not, launch /install procedure
+
+    # Check if blog exists regarding the configuration file ('path' variable)
+    #+ If not, launch /install procedure
+    if not path.exists(hymby.config.get('path', False)):
+        # TODO: Add a param to inform why we launch installation
+        redirect('/install')
+    return True
 
 def dblist(path, extension):
     '''
@@ -48,44 +99,38 @@ def item_data(filepath):
 @hymby.route('/install')
 def install():
     '''
-    Launch the installation procedure
+    Launch the installation procedure:
+      - fetch some info
+      - create the configuration file
+      - fetch the given static weblog engine
     '''
-    # TODO: if not hymby.CONFIG, check config file to initialize variable or do /install
+    # TODO: if not hymby.config, check config file to initialize variable or do /install
     content = '<p>TODO: Perform installation</p>'
-    if hymby.CONFIG and hymby.CONFIG.get('engine', False):
+    if hymby.config and hymby.config.get('general.engine', False):
         content = '<p>Already installed. <a href="/items">List items</a></p>'
     return '<h3>Installation</h3>' + content
 
 @hymby.route('/')
-def check_config_file():
+def homepage():
     '''
     Check configuration file then redirect to the items list
     '''
-    # TODO: Check if configuration file exists (make a global variable with the name of the configuration file).
-    #+ If not, launch /install procedure
-    #+ If exist, read configuration file
-    # TODO: read configuration file and fill in "hymby.CONFIG" variable with result
-    hymby.CONFIG.update({
-        'engine': 'makefly',
-        'path': './hosted_engine',
-    })
-    # TODO: Check if engine module exists regarding the configuration file ('engine' variable)
-    # If not, launch /install procedure
-    # TODO: Check if blog exists regarding the configuration file ('path' variable)
-    #+ If not, launch /install procedure
-
-    # If all is OK, read configuratigo to the webadmin panel (list of items)
+    check_config()
+    # If all is OK, redirect user to the list of items)
     redirect('/items')
 
 @hymby.route('/items')
-def homepage():
+def items():
     '''
     List of items
     '''
-    # TODO: if not hymby.CONFIG, check config file to initialize variable or do /install
+    check_config()
+    # TODO: if not hymby.config, check config file to initialize variable or do /install
     res = '<h3>List</h3>'
-    db_path = hymby.CONFIG.get('path', '') + '/' + 'db' + '/'
-    files = dblist(db_path, hymby.dbfiles_extension)
+    db_path = '/'.join([hymby.config.get('general.path', ''), hymby.config.get('makefly.db_directory', '')]) + '/'
+    files = hymby.DBFILES
+    if not files:
+        files = dblist(db_path, hymby.config.get('makefly.db_extension'))
     return template('items', items=[(x, item_data(db_path + x)) for x in files])
 
 @hymby.route('/items/new')
@@ -95,6 +140,7 @@ def new_item(method='GET'):
     If no data, get form view.
     If data given, add the new item.
     '''
+    check_config()
     if request.GET.get('save', '').strip():
         name = request.GET.get('name', '').strip()
         # TODO: fetch info
@@ -107,7 +153,8 @@ def item(name='Untitled'):
     '''
     Display content of given post (name)
     '''
-    # TODO: if not hymby.CONFIG, check config file to initialize variable or do /install
+    check_config()
+    # TODO: if not hymby.config, check config file to initialize variable or do /install
     # TODO: return to homepage or give a redirection to /items if name == Untitled
     if name == 'Untitled':
         return HTTPError(404)
@@ -115,8 +162,7 @@ def item(name='Untitled'):
     matching = regex.match(name)
     source_file = ''
     if matching:
-        print matching
-        source_file = hymby.CONFIG.get('path', '') + '/src/' + matching.groups()[1] + '.md'
+        source_file = '/'.join([hymby.config.get('general.path', ''), hymby.config.get('makefly.src_directory', ''), matching.groups()[1] + hymby.config.get('makefly.src_extension', '')])
     content = ''
     if source_file:
         sf = open(source_file, 'r')
