@@ -1,4 +1,4 @@
-from bottle import Bottle, route, run, template, redirect
+from bottle import Bottle, route, run, template, redirect, request
 from os import listdir, path
 from re import sub, compile as recompile
 
@@ -76,9 +76,14 @@ def homepage():
     files = dblist(db_path, hymby.dbfiles_extension)
     return template('items', items=[(x, item_data(db_path + x)) for x in files])
 
-@hymby.error(404)
-def error404(error):
-    return 'Nothing here! Try this: <a href="/">Homepage</a>'
+@hymby.route('/items/new')
+def new_item(method='GET'):
+    if request.GET.get('save', '').strip():
+        name = request.GET.get('name', '').strip()
+        # TODO: fetch info
+        return '<p>New post added successfully: %s.</p>' % (name)
+    else:
+      return template('new_post.tpl', name='New post', title='Add a new post')
 
 @hymby.route('/item/<name>')
 def item(name='Untitled'):
@@ -107,5 +112,9 @@ def item(name='Untitled'):
     except ImportError as e:
         content = 'python-markdown is missing!'
     return template('item.tpl', content=content, name=details.get('TITLE', ''), title=details.get('TITLE', ''))
+
+@hymby.error(404)
+def error404(error):
+    return 'Nothing here! Try this: <a href="/">Homepage</a>'
 
 hymby.run(host='localhost', port=8080, debug=True)

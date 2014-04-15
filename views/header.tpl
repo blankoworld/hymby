@@ -89,6 +89,7 @@
     <ol>
       <li><a href="/">Homepage</a></li>
       <li><a href="/items">List</a></li>
+      <li><a href="/items/new">New post</a></li>
       <li><a href="/config">Configuration</a></li>
     </ol>
   </aside>
