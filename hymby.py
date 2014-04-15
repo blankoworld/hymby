@@ -1,4 +1,4 @@
-from bottle import Bottle, route, run, template, redirect, request
+from bottle import Bottle, route, run, template, redirect, request, static_file
 from os import listdir, path
 from re import sub, compile as recompile
 from ConfigParser import SafeConfigParser as ConfigParser
@@ -185,12 +185,17 @@ def item(name='Untitled'):
         content = 'python-markdown is missing!'
     return template('item.tpl', content=content, name=details.get('TITLE', ''), title=details.get('TITLE', ''))
 
+# Serve static files
+@hymby.route('/static/<filename:path>')
+def send_static(filename):
+    return static_file(filename, root='./static/')
+
 @hymby.error(404)
 def error404(error):
     '''
     Default 404 page.
     '''
-    return template('404_error.tpl')
+    return template('404.tpl')
 
 # Setup route
 hymby.route('/install', ['GET', 'POST'], install)
