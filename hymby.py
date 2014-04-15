@@ -195,4 +195,7 @@ def error404(error):
 # Setup route
 hymby.route('/install', ['GET', 'POST'], install)
 
-hymby.run(host='localhost', port=8080, debug=True, quiet=False)
+# Run application
+#+ DEBUG   : should be set to False in production
+#+ RELOADER: idem
+hymby.run(host='localhost', port=8080, debug=True, reloader=True)
