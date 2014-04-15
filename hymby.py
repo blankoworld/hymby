@@ -135,6 +135,6 @@ def error404(error):
     '''
     Default 404 page.
     '''
-    return 'Nothing here! Try this: <a href="/">Homepage</a>'
+    return template('404_error.tpl')
 
 hymby.run(host='localhost', port=8080, debug=True)
