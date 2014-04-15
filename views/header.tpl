@@ -67,6 +67,22 @@
     padding: 0.5%;
     min-height: 300px;
   }
+  #content p.warning {
+    background-color: #FCFCE9;
+    width: 98%;
+    margin: 5px auto;
+    padding: 1%;
+    border: thin solid gray;
+    color: #494949;
+  }
+  #content p.error {
+    background-color: #FFDFDF;
+    width: 98%;
+    margin: 5px auto;
+    padding: 1%;
+    border: thin solid gray;
+    color: #494949;
+  }
   footer {
     width: 85%;
     margin: 0 auto;

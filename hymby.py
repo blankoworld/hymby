@@ -30,7 +30,7 @@ def check_config():
     If not: go to the installation page to create the file.
     '''
     # if configuration file exists and hymby.config filled in, nothing to do
-    if path.exists(hymby.config['filename']) and hymby.config.get('checked', False) and path.exists(hymby.config.get('path', False)):
+    if path.exists(hymby.config['filename']) and hymby.config.get('checked', False) and path.exists(hymby.config.get('general.path', False)):
         return True
     # Check if configuration file exists.
     #+ If not, launch /install procedure
@@ -53,19 +53,19 @@ def check_config():
 
     # Check if blog exists regarding the configuration file ('path' variable)
     #+ If not, launch /install procedure
-    if not path.exists(hymby.config.get('path', False)):
+    if not path.exists(hymby.config.get('general.path', False)):
         # TODO: Add a param to inform why we launch installation
         redirect('/install')
     return True
 
-def dblist(path, extension):
+def dblist(pathname, extension):
     '''
     Return list of item from the DB
     TODO: read a specific configuration file to know from which engine 
     we come and were to find the DB (or specific method for each one).
     '''
     files = []
-    for listed_file in listdir(path):
+    for listed_file in listdir(pathname):
         if listed_file.endswith(extension):
             files.append(listed_file)
     # Complete DBFILES global variable
@@ -96,19 +96,28 @@ def item_data(filepath):
             f.close()
     return variables
 
-@hymby.route('/install')
-def install():
+def install(message='', message_type='normal'):
     '''
     Launch the installation procedure:
       - fetch some info
       - create the configuration file
       - fetch the given static weblog engine
     '''
-    # TODO: if not hymby.config, check config file to initialize variable or do /install
-    content = '<p>TODO: Perform installation</p>'
-    if hymby.config and hymby.config.get('general.engine', False):
-        content = '<p>Already installed. <a href="/items">List items</a></p>'
-    return '<h3>Installation</h3>' + content
+    installed = False
+    if request.forms.get('save', '').strip():
+        # TODO: check that engine + path have been filled in
+        #+ If not, redirect to '/install' with message "missing info"
+        # TODO: perform installation regarding given info
+        pathname = request.forms.get('path', '').strip()
+        if not pathname:
+            return template('install.tpl', message='Path missing', message_type='warning', installed=False)
+        return "<p>Installation succeeded.</p>"
+    else:
+        config_exists = path.exists(hymby.config.get('filename', '')) or False
+        config_checked = hymby.config.get('checked', False)
+        if config_exists and config_checked:
+            installed = True
+        return template('install.tpl', installed=installed, message=message, message_type=message_type)
 
 @hymby.route('/')
 def homepage():
@@ -183,4 +192,7 @@ def error404(error):
     '''
     return template('404_error.tpl')
 
-hymby.run(host='localhost', port=8080, debug=True)
+# Setup route
+hymby.route('/install', ['GET', 'POST'], install)
+
+hymby.run(host='localhost', port=8080, debug=True, quiet=False)
