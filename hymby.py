@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from bottle import Bottle, route, run, template, redirect, request, static_file
 from os import listdir, path
 from re import sub, compile as recompile
@@ -45,17 +47,23 @@ def check_config():
     for section in conf.sections():
         for key, value in conf.items(section):
             key = section + '.' + key
-        hymby.config.update({key: value})
+            hymby.config.update({key: value})
     hymby.config.update({'checked': True}) # Configuration checked
 
     # TODO: Check if engine module exists regarding the configuration file ('engine' variable)
     # If not, launch /install procedure
+    conf_engine = hymby.config.get('general.engine', False)
+    if not conf_engine:
+        redirect('/install')
 
     # Check if blog exists regarding the configuration file ('path' variable)
     #+ If not, launch /install procedure
     if not path.exists(hymby.config.get('general.path', False)):
         # TODO: Add a param to inform why we launch installation
         redirect('/install')
+    # Load given engine special features
+    loaded_engine = __import__('engines.' + conf_engine)
+    hymby.get_items = getattr(loaded_engine, conf_engine).get_items()
     return True
 
 def dblist(pathname, extension):
@@ -119,6 +127,10 @@ def install(message='', message_type='normal'):
             installed = True
         return template('install.tpl', installed=installed, message=message, message_type=message_type)
 
+def get_items():
+    print "INTO HYMBY"
+    return [('item_number', 'title', 'description')]
+
 @hymby.route('/')
 def homepage():
     '''
@@ -134,13 +146,13 @@ def items():
     List of items
     '''
     check_config()
-    # TODO: if not hymby.config, check config file to initialize variable or do /install
-    res = '<h3>List</h3>'
-    db_path = '/'.join([hymby.config.get('general.path', ''), hymby.config.get('makefly.db_directory', '')]) + '/'
-    files = hymby.DBFILES
-    if not files:
-        files = dblist(db_path, hymby.config.get('makefly.db_extension'))
-    return template('items', items=[(x, item_data(db_path + x)) for x in files])
+    item_list = hymby.get_items or []
+    return template('items', items=item_list)
+#    db_path = '/'.join([hymby.config.get('general.path', ''), hymby.config.get('makefly.db_directory', '')]) + '/'
+#    files = hymby.DBFILES
+#    if not files:
+#        files = dblist(db_path, hymby.config.get('makefly.db_extension'))
+#    return template('items', items=[(x, item_data(db_path + x)) for x in files])
 
 @hymby.route('/items/new')
 def new_item(method='GET'):
