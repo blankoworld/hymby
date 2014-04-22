@@ -11,11 +11,32 @@
 		<meta name="description" content="Page not found" />
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 		<title>Error 404 – Page non trouvée</title>
+
+    <style>
+  p.warning {
+    background-color: #FCFCE9;
+    width: 98%;
+    margin: 5px auto;
+    padding: 1%;
+    border: thin solid gray;
+    color: #494949;
+  }
+  p.error {
+    background-color: #FFDFDF;
+    width: 98%;
+    margin: 5px auto;
+    padding: 1%;
+    border: thin solid gray;
+    color: #494949;
+  }
+
+    </style>
 	</head>
 	<body>
 		<div id="page">
 		<div id="message">
 			<h1>Page not found</h1>
+      <p class='{{ message_type }}'>{{ message }}</p>
 			<p>For an unexplicable reason the page you request is unreachable.</p>
 			<p><a href="/" title="Homepage">Return to the homepage</a></p>
 		</div>

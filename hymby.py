@@ -113,8 +113,7 @@ def install(message='', message_type='normal'):
         return template('install.tpl', installed=installed, message=message, message_type=message_type)
 
 def get_items():
-    print "INTO HYMBY"
-    return [('item_number', 'title', 'description')]
+    return error404('No engine found', 'error')
 
 @hymby.route('/')
 def homepage():
@@ -122,7 +121,7 @@ def homepage():
     Check configuration file then redirect to the items list
     '''
     check_config()
-    # If all is OK, redirect user to the list of items)
+    # If all is OK, redirect user to the list of items
     redirect('/items')
 
 @hymby.route('/items')
@@ -183,11 +182,11 @@ def send_static(filename):
     return static_file(filename, root='./static/')
 
 @hymby.error(404)
-def error404(error):
+def error404(error='', error_type='none'):
     '''
     Default 404 page.
     '''
-    return template('404.tpl')
+    return template('404.tpl', message=error, message_type=error_type)
 
 # Setup route
 hymby.route('/install', ['GET', 'POST'], install)
