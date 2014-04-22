@@ -24,7 +24,7 @@ makefly_config = {
 hymby.config.update(makefly_config)
 
 # Useful info
-hymby.DBFILES = []
+hymby.DBFILES = [] # contains list of files that contains the metadata of each post
 
 def check_config():
     '''
@@ -63,23 +63,8 @@ def check_config():
         redirect('/install')
     # Load given engine special features
     loaded_engine = __import__('engines.' + conf_engine)
-    hymby.get_items = getattr(loaded_engine, conf_engine).get_items()
+    hymby.get_items = getattr(loaded_engine, conf_engine).get_items(hymby)
     return True
-
-def dblist(pathname, extension):
-    '''
-    Return list of item from the DB
-    TODO: read a specific configuration file to know from which engine 
-    we come and were to find the DB (or specific method for each one).
-    '''
-    files = []
-    for listed_file in listdir(pathname):
-        if listed_file.endswith(extension):
-            files.append(listed_file)
-    # Complete DBFILES global variable
-    if not hymby.DBFILES:
-        hymby.DBFILES = list(files)
-    return files
 
 def item_data(filepath):
     '''
@@ -148,11 +133,6 @@ def items():
     check_config()
     item_list = hymby.get_items or []
     return template('items', items=item_list)
-#    db_path = '/'.join([hymby.config.get('general.path', ''), hymby.config.get('makefly.db_directory', '')]) + '/'
-#    files = hymby.DBFILES
-#    if not files:
-#        files = dblist(db_path, hymby.config.get('makefly.db_extension'))
-#    return template('items', items=[(x, item_data(db_path + x)) for x in files])
 
 @hymby.route('/items/new')
 def new_item(method='GET'):
