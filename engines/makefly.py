@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from os import listdir, path
+from os import listdir
+from os import path
 from re import sub
+from re import compile as recompile
 
 def makefly_metafiles(self, pathname, extension):
     '''
@@ -63,3 +65,43 @@ def get_items(self):
             description = metadata.get('DESCRIPTION', 'No description available')
             result.append((f, title, description))
     return result
+
+def get_item_metadata(self, identifier):
+    """
+    Return meta
+    """
+    # Some checks
+    if not identifier:
+        return {}
+    # Prepare some value
+    metafiles_path = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.db_directory', '')]) + '/'
+    metafile_path = '' + metafiles_path + identifier
+    # Fetch info and return result
+    metadata = makefly_metadata(self, metafile_path)
+    return metadata
+
+def get_item_content(self, identifier):
+    """
+    Get the content of the given identifier
+    """
+    # Some checks
+    if not identifier:
+        return ''
+    # Prepare some value
+    content = ''
+    # Fetch post content
+    regex = recompile('(?P<timestamp>\d+),(?P<basename>.*)(?P<extension>\.mk)')
+    matching = regex.match(identifier)
+    source_file = ''
+    if matching:
+        source_file = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.src_directory', ''), matching.groups()[1] + self.config.get('makefly.src_extension', '')])
+    if source_file:
+        sf = open(source_file, 'r')
+        content = sf.read()
+        sf.close()
+    try:
+        mdwn = __import__('markdown')
+        content = mdwn.markdown(content)
+    except ImportError as e:
+        content = 'python-markdown is missing!'
+    return content

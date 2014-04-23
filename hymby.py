@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from bottle import Bottle, route, run, template, redirect, request, static_file
 from os import listdir, path
-from re import sub, compile as recompile
 from ConfigParser import SafeConfigParser as ConfigParser
 
 hymby = Bottle()
@@ -63,31 +62,8 @@ def check_config():
         redirect('/install')
     # Load given engine special features
     loaded_engine = __import__('engines.' + conf_engine)
-    hymby.get_items = getattr(loaded_engine, conf_engine).get_items(hymby)
+    hymby.engine = getattr(loaded_engine, conf_engine)
     return True
-
-def item_data(filepath):
-    '''
-    Read meta data from files in the given path.
-    The format is:
-        variable = content
-    Also delete whitespace at beginning and end of variable and content.
-    '''
-    variables = {}
-    if path.exists(filepath):
-        with open(filepath, 'r') as f:
-            lines = f.readlines()
-            for line in lines:
-                data = line.split('=')
-                if data and len(data) > 1:
-                    # delete first and last spaces
-                    variable = sub(' *$', '', data[0])
-                    variable = sub('^ *', '', variable)
-                    content = sub(' *$', '', data[1])
-                    content = sub('^ *', '', content)
-                    variables.update({variable: content.replace('\n', '')})
-            f.close()
-    return variables
 
 def install(message='', message_type='normal'):
     '''
@@ -130,7 +106,7 @@ def items():
     List of items
     '''
     check_config()
-    item_list = hymby.get_items or []
+    item_list = hymby.engine.get_items(hymby) or []
     return template('items', items=item_list)
 
 @hymby.route('/items/new')
@@ -149,31 +125,17 @@ def new_item(method='GET'):
       return template('new_post.tpl', name='New post', title='Add a new post')
 
 @hymby.route('/item/<name>')
-def item(name='Untitled'):
+def item(name):
     '''
     Display content of given post (name)
     '''
     check_config()
-    # TODO: return to homepage or give a redirection to /items if name == Untitled
-    if name == 'Untitled':
-        return HTTPError(404)
-    regex = recompile('(?P<timestamp>\d+),(?P<basename>.*)(?P<extension>\.mk)')
-    matching = regex.match(name)
-    source_file = ''
-    if matching:
-        source_file = '/'.join([hymby.config.get('general.path', ''), hymby.config.get('makefly.src_directory', ''), matching.groups()[1] + hymby.config.get('makefly.src_extension', '')])
-    content = ''
-    if source_file:
-        sf = open(source_file, 'r')
-        content = sf.read()
-        sf.close()
-    details = item_data(name)
-    try:
-        mdwn = __import__('markdown')
-        content = mdwn.markdown(content)
-    except ImportError as e:
-        content = 'python-markdown is missing!'
-    return template('item.tpl', content=content, name=details.get('TITLE', ''), title=details.get('TITLE', ''))
+    # search the post
+    details = hymby.engine.get_item_metadata(hymby, name)
+    # if no details, return to /items
+    if not details:
+        redirect('/items')
+    return template('item.tpl', content=hymby.engine.get_item_content(hymby, name), name=details.get('TITLE', ''), title=details.get('TITLE', ''))
 
 # Serve static files
 @hymby.route('/static/<filename:path>')
