@@ -154,7 +154,6 @@ def item(name='Untitled'):
     Display content of given post (name)
     '''
     check_config()
-    # TODO: if not hymby.config, check config file to initialize variable or do /install
     # TODO: return to homepage or give a redirection to /items if name == Untitled
     if name == 'Untitled':
         return HTTPError(404)
