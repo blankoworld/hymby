@@ -1,5 +1,17 @@
 # TODO
 
+## General
+
   * Add a LICENSE on Hymby
+  * Make a tests directory
+  * Learn how to test a bottlepy app
+
+## Code
+
+  * Migrate the item_data and item method into makefly
+  * Permit to delete some posts
+  * Complete installation steps
+  * Make possibility to create a new article (just create it with some info)
+  * Make possibility to edit an article
 
 # DONE
