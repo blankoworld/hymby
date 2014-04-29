@@ -109,18 +109,38 @@ def items():
     item_list = hymby.engine.get_items(hymby) or []
     return template('items', items=item_list)
 
-@hymby.route('/items/new')
-def new_item(method='GET'):
+def new_item():
     '''
     New item creation page.
     If no data, get form view.
     If data given, add the new item.
     '''
     check_config()
-    if request.GET.get('save', '').strip():
-        name = request.GET.get('name', '').strip()
-        # TODO: fetch info
-        return '<p>New post added successfully: %s.</p>' % (name)
+    data = {}
+    if request.POST.get('save', '').strip():
+        # Fetch info
+        r = request.POST
+        pname = r.get('name', '').strip()
+        pdesc = r.get('description', '').strip()
+        pdate = r.get('date', '').strip()
+        ptype = r.get('type', '').strip()
+        ptags = r.get('tags', '').strip()
+        pkeyword = r.get('keyword', '').strip()
+        pauthor = r.get('author', '').strip()
+        # Create the new item
+        data.update({
+          'NAME': pname,
+          'DESCRIPTION': pdesc,
+          'DATE': pdate,
+          'TYPE': ptype,
+          'TAGS': ptags,
+          'KEYWORDS': pkeyword,
+          'AUTHOR': pauthor,
+        })
+        pid, msg = hymby.engine.new_item(hymby, data)
+        if not pid:
+            return template('errors.tpl', title='Warning', message_type='warning', message=msg)
+        redirect('/item/%s' % pid)
     else:
       return template('new_post.tpl', name='New post', title='Add a new post')
 
@@ -151,6 +171,7 @@ def error404(error='', error_type='none'):
 
 # Setup route
 hymby.route('/install', ['GET', 'POST'], install)
+hymby.route('/items/new', ['GET', 'POST'], new_item)
 
 # Run application
 #+ DEBUG   : should be set to False in production

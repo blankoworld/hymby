@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="robot" content="noindex, nofollow" />
+  <meta name="robots" content="noindex, nofollow" />
   <meta name="generator" content="Hymby">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Hymby - {{ title }}</title>
@@ -82,6 +82,12 @@
     padding: 1%;
     border: thin solid gray;
     color: #494949;
+  }
+  label
+  {
+    display: block;
+    width: 150px;
+    float: left;
   }
   footer {
     width: 85%;

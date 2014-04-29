@@ -5,6 +5,7 @@
   * Add a LICENSE on Hymby
   * Make a tests directory
   * Learn how to test a bottlepy app
+  * Use subprocess module of python to launch command in shell
 
 ## Code
 
