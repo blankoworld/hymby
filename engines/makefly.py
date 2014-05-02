@@ -4,26 +4,7 @@ from os import listdir
 from os import path
 from re import sub
 from re import compile as recompile
-from datetime import datetime
-
-def text2url(text):
-    if not text:
-        return ''
-    text = text.strip()
-    htmlcodes = ['A;', 'a', 'A', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'C', 'c', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'N', 'n', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 's', 'P', 'p', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'Y', 'y', 'y', 'C', 'R', 'TM', 'E', 'C', 'L', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_']
-    funnychars = ['\xc1','\xe1','\xc0','\xc2','\xe0','\xc2','\xe2','\xc4','\xe4','\xc3','\xe3','\xc5','\xe5','\xc6','\xe6','\xc7','\xe7','\xd0','\xf0','\xc9','\xe9','\xc8','\xe8','\xca','\xea','\xcb','\xeb','\xcd','\xed','\xcc','\xec','\xce','\xee','\xcf','\xef','\xd1','\xf1','\xd3','\xf3','\xd2','\xf2','\xd4','\xf4','\xd6','\xf6','\xd5','\xf5','\xd8','\xf8','\xdf','\xde','\xfe','\xda','\xfa','\xd9','\xf9','\xdb','\xfb','\xdc','\xfc','\xdd','\xfd','\xff','\xa9','\xae','\u2122','\u20ac','\xa2','\xa3','\u2018','\u2019','\u201c','\u201d','\xab','\xbb','\u2014','\u2013','\xb0','\xb1','\xbc','\xbd','\xbe','\xd7','\xf7','\u03b1','\u03b2','\u221e']
-    newtext = ''
-    for char in text:
-        if char not in funnychars:
-            # delete special char
-            if not char.isalnum():
-                newtext = newtext + '_'
-            else:
-                newtext = newtext + char
-        else:
-            newtext  = newtext + htmlcodes[funnychars.index(char)]
-    # TODO: delete duplicates of _
-    return newtext
+from subprocess import Popen, PIPE
 
 def makefly_metafiles(self, pathname, extension):
     '''
@@ -149,8 +130,21 @@ def new_item(self, data):
     if not title:
         return False, 'No title specified!'
     # Create the new post
-    today = datetime.today()
-    timestamp = today.strftime('%s')
-    new_title = text2url(title)
-    print new_title
+    p = Popen(["/home/olivier/personnel/projet/hymby/hosted_engine/tools/create_post.sh", "-q"], stdin=PIPE, stdout=PIPE, env={"DBDIR": "./hosted_engine/db", "SRCDIR": "./hosted_engine/src"})
+    try:
+        stdout = p.communicate(input="%s\n%s\n%s\n%s\n%s\n%s\n" % (author or 'Unknown', title, description or ' ', tags or ' ', ptype or 'normal', keyword or 'unknown'))
+    except Exception as e:
+        return False, e
+    # Check result
+    # first that an output exist
+    if not len(stdout) or not len(stdout) > 1:
+        return False, 'Post creation failed!'
+    # then that given output begins with "Metafile" word
+    if not stdout[0].startswith('Metafile: '):
+        return False, "Makefly's error: %s" % stdout[0]
+    result = stdout[0].split('\n')
+    src_filename = path.basename(result[1])
+    db_filename = path.basename(result[0])
+    res = db_filename
+    # TODO: Add the post to the HYMBY list of posts
     return res, message

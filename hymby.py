@@ -120,13 +120,13 @@ def new_item():
     if request.POST.get('save', '').strip():
         # Fetch info
         r = request.POST
-        pname = r.getunicode('name', '').strip()
-        pdesc = r.getunicode('description', '').strip()
-        pdate = r.getunicode('date', '').strip()
-        ptype = r.getunicode('type', '').strip()
-        ptags = r.getunicode('tags', '').strip()
-        pkeyword = r.getunicode('keyword', '').strip()
-        pauthor = r.getunicode('author', '').strip()
+        pname = r.getunicode('name', '').encode('utf-8').strip()
+        pdesc = r.getunicode('description', '').encode('utf-8').strip()
+        pdate = r.getunicode('date', '').encode('utf-8').strip()
+        ptype = r.getunicode('type', '').encode('utf-8').strip()
+        ptags = r.getunicode('tags', '').encode('utf-8').strip()
+        pkeyword = r.getunicode('keyword', '').encode('utf-8').strip()
+        pauthor = r.getunicode('author', '').encode('utf-8').strip()
         # Create the new item
         data.update({
           'NAME': pname,
