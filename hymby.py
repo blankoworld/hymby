@@ -77,7 +77,7 @@ def install(message='', message_type='normal'):
         # TODO: check that engine + path have been filled in
         #+ If not, redirect to '/install' with message "missing info"
         # TODO: perform installation regarding given info
-        pathname = request.forms.get('path', '').strip()
+        pathname = request.forms.getunicode('path', '').encode('utf-8').strip()
         if not pathname:
             return template('install.tpl', message='Path missing', message_type='warning', installed=False)
         return "<p>Installation succeeded.</p>"
