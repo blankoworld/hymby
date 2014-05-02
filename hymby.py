@@ -176,4 +176,4 @@ hymby.route('/items/new', ['GET', 'POST'], new_item)
 # Run application
 #+ DEBUG   : should be set to False in production
 #+ RELOADER: idem
-hymby.run(host='localhost', port=8080, debug=True, reloader=True)
+hymby.run(host='0.0.0.0', port=8080, debug=True, reloader=True)
