@@ -7,9 +7,11 @@
 
 ## Code
 
-  * Permit to delete some posts
   * Complete installation steps
   * Make possibility to edit an article
+  * Make all methods from makefly.py (or other) to return 2 values:
+    * the result : True/False
+    * the message (mainly used if result is False)
 
 ## Miscellaneous
 
@@ -22,3 +24,4 @@
   * Use subprocess module of python to launch command in shell
   * Make possibility to create a new article (just create it with some info)
   * Add a LICENSE on Hymby
+  * Permit to delete some posts
