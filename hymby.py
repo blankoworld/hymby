@@ -165,12 +165,31 @@ def item(name):
     if not details:
         redirect('/items')
     return template('item.tpl', content=hymby.engine.get_item_content(hymby, name), name=details.get('TITLE', ''), title=details.get('TITLE', ''))
+@hymby.route('/delete/<name>')
+def delete_item(name):
+    """
+    Delete given item (name).
+    """
+    check_config()
+    # search the post
+    item_exists = hymby.engine.item_exists(hymby, name)
+    # if not details, post doesn't exist, return an error
+    if not item_exists:
+        msg = 'Post not found: %s' % (name or '')
+        return template('errors.tpl', title='Error', message_type='error', message=msg)
+    # otherwise delete items and return to item list
+    result, msg = hymby.engine.delete_item(hymby, name)
+    if result:
+        redirect('/items')
+    else:
+        return template('errors.tpl', title='Error', message_type='error', message=msg)
 
-# Serve static files
+# STATIC routes
 @hymby.route('/static/<filename:path>')
 def send_static(filename):
     return static_file(filename, root='./static/')
 
+# ERRORS
 @hymby.error(404)
 def error404(error='', error_type='none'):
     '''
@@ -178,7 +197,7 @@ def error404(error='', error_type='none'):
     '''
     return template('404.tpl', message=error, message_type=error_type)
 
-# Setup route
+# SPECIAL routes
 hymby.route('/install', ['GET', 'POST'], install)
 hymby.route('/items/new', ['GET', 'POST'], new_item)
 

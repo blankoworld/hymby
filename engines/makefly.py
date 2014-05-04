@@ -7,12 +7,14 @@ Copyright (c) 2014, Olivier DOSSMANN
 License: MIT (see LICENSE for details)
 """
 
-
 from os import listdir
 from os import path
+from os import remove
 from re import sub
 from re import compile as recompile
 from subprocess import Popen, PIPE
+
+MAKEFLY_DBFILE_REGEX = recompile('(?P<timestamp>\d+),(?P<basename>.*)(?P<extension>\.mk)')
 
 def makefly_metafiles(self, pathname, extension):
     '''
@@ -75,6 +77,19 @@ def get_items(self):
             result.append((f, title, description))
     return result
 
+def item_exists(self, identifier):
+    """
+    Check if the item exists in DB directory.
+    Return a boolean
+    """
+    # Some checks
+    if not identifier:
+        return False
+    # Prepare some values
+    metafiles_path = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.db_directory', '')]) + '/'
+    metafile_path = '' + metafiles_path + identifier
+    return path.exists(metafile_path)
+
 def get_item_metadata(self, identifier):
     """
     Return meta
@@ -99,8 +114,7 @@ def get_item_content(self, identifier):
     # Prepare some value
     content = ''
     # Fetch post content
-    regex = recompile('(?P<timestamp>\d+),(?P<basename>.*)(?P<extension>\.mk)')
-    matching = regex.match(identifier)
+    matching = MAKEFLY_DBFILE_REGEX.match(identifier)
     source_file = ''
     if matching:
         source_file = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.src_directory', ''), matching.groups()[1] + self.config.get('makefly.src_extension', '')])
@@ -156,3 +170,31 @@ def new_item(self, data):
     res = db_filename
     # TODO: Add the post to the HYMBY list of posts
     return res, message
+
+def delete_item(self, identifier):
+    """
+    Delete given post regarding its identifier
+    """
+    # Prepare some values
+    res = False
+    msg = ''
+    metafiles_path = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.db_directory', '')]) + '/'
+    srcfiles_path = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.src_directory', '')]) + '/'
+    metafile_path = '' + metafiles_path + identifier
+    # Get source file path
+    matching = MAKEFLY_DBFILE_REGEX.match(identifier)
+    source_file = ''
+    if matching:
+        source_file = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.src_directory', ''), matching.groups()[1] + self.config.get('makefly.src_extension', '')])
+    # Delete files (but only if source_file found)
+    if source_file and path.exists(source_file):
+        remove(metafile_path)
+        remove(source_file)
+        res = True
+    elif source_file:
+        remove(metafile_path)
+        msg = 'Source file (%s) not found! Metafile deleted.' % (source_file)
+        res=  True
+    else:
+        msg = 'No source file. Metafile deleted'
+    return res, msg
