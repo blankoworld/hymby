@@ -1,5 +1,9 @@
 # TODO
 
+## Bugs
+
+  * add a post doesn't update post list (/items)
+
 ## General
 
   * Make a tests directory
@@ -25,3 +29,5 @@
   * Make possibility to create a new article (just create it with some info)
   * Add a LICENSE on Hymby
   * Permit to delete some posts
+  * self.config redefinition for hymby object
+  * Improve the configuration file read by using "ConfigDict()" class from bottle
