@@ -14,13 +14,13 @@ from os import listdir, path
 from ConfigParser import SafeConfigParser as ConfigParser
 
 hymby = Bottle()
-hymby.config = {}
+hymby.params = {}
 # General configuration
 general_config = {
     'filename': 'hymbyrc',
     'checked': False
 }
-hymby.config.update(general_config)
+hymby.params.update(general_config)
 
 # Makefly default configuration
 makefly_config = {
@@ -29,44 +29,44 @@ makefly_config = {
     'makefly.db_directory': 'db',
     'makefly.src_directory': 'src',
 }
-hymby.config.update(makefly_config)
+hymby.params.update(makefly_config)
 
 # Useful info
 hymby.DBFILES = [] # contains list of files that contains the metadata of each post
 
 def check_config():
     '''
-    Check that configuration file exist regarding hymby.config['filename'] variable.
+    Check that configuration file exist regarding hymby.params['filename'] variable.
     If not: go to the installation page to create the file.
     '''
-    # if configuration file exists and hymby.config filled in, nothing to do
-    if path.exists(hymby.config['filename']) and hymby.config.get('checked', False) and path.exists(hymby.config.get('general.path', False)):
+    # if configuration file exists and hymby.params filled in, nothing to do
+    if path.exists(hymby.params['filename']) and hymby.params.get('checked', False) and path.exists(hymby.params.get('general.path', False)):
         return True
     # Check if configuration file exists.
     #+ If not, launch /install procedure
     #+ If exist, read configuration file
-    if not path.exists(hymby.config['filename']):
+    if not path.exists(hymby.params['filename']):
         # TODO: Add a param to inform why we launch installation
         redirect('/install')
 
     # Read configuration file
     conf = ConfigParser()
-    conf.read(hymby.config['filename'])
+    conf.read(hymby.params['filename'])
     for section in conf.sections():
         for key, value in conf.items(section):
             key = section + '.' + key
-            hymby.config.update({key: value})
-    hymby.config.update({'checked': True}) # Configuration checked
+            hymby.params.update({key: value})
+    hymby.params.update({'checked': True}) # Configuration checked
 
     # TODO: Check if engine module exists regarding the configuration file ('engine' variable)
     # If not, launch /install procedure
-    conf_engine = hymby.config.get('general.engine', False)
+    conf_engine = hymby.params.get('general.engine', False)
     if not conf_engine:
         redirect('/install')
 
     # Check if blog exists regarding the configuration file ('path' variable)
     #+ If not, launch /install procedure
-    if not path.exists(hymby.config.get('general.path', False)):
+    if not path.exists(hymby.params.get('general.path', False)):
         # TODO: Add a param to inform why we launch installation
         redirect('/install')
     # Load given engine special features
@@ -91,8 +91,8 @@ def install(message='', message_type='normal'):
             return template('install.tpl', message='Path missing', message_type='warning', installed=False)
         return "<p>Installation succeeded.</p>"
     else:
-        config_exists = path.exists(hymby.config.get('filename', '')) or False
-        config_checked = hymby.config.get('checked', False)
+        config_exists = path.exists(hymby.params.get('filename', '')) or False
+        config_checked = hymby.params.get('checked', False)
         if config_exists and config_checked:
             installed = True
         return template('install.tpl', installed=installed, message=message, message_type=message_type)

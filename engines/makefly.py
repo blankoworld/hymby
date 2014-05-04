@@ -62,10 +62,10 @@ def get_items(self):
     # Prepare some values
     result = []
     files = self.DBFILES
-    metafiles_path = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.db_directory', '')]) + '/'
+    metafiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.db_directory', '')]) + '/'
     # Check files ' list presence
     if not files:
-        metafiles_extension = self.config.get('makefly.db_extension', '')
+        metafiles_extension = self.params.get('makefly.db_extension', '')
         files = makefly_metafiles(self, metafiles_path, metafiles_extension)
     # Search post's info
     for f in files:
@@ -86,7 +86,7 @@ def item_exists(self, identifier):
     if not identifier:
         return False
     # Prepare some values
-    metafiles_path = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.db_directory', '')]) + '/'
+    metafiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.db_directory', '')]) + '/'
     metafile_path = '' + metafiles_path + identifier
     return path.exists(metafile_path)
 
@@ -98,7 +98,7 @@ def get_item_metadata(self, identifier):
     if not identifier:
         return {}
     # Prepare some value
-    metafiles_path = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.db_directory', '')]) + '/'
+    metafiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.db_directory', '')]) + '/'
     metafile_path = '' + metafiles_path + identifier
     # Fetch info and return result
     metadata = makefly_metadata(self, metafile_path)
@@ -117,7 +117,7 @@ def get_item_content(self, identifier):
     matching = MAKEFLY_DBFILE_REGEX.match(identifier)
     source_file = ''
     if matching:
-        source_file = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.src_directory', ''), matching.groups()[1] + self.config.get('makefly.src_extension', '')])
+        source_file = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.src_directory', ''), matching.groups()[1] + self.params.get('makefly.src_extension', '')])
     if source_file:
         sf = open(source_file, 'r')
         content = sf.read()
@@ -139,8 +139,8 @@ def new_item(self, data):
     # Prepare some values
     res = False
     message = ''
-    metafiles_path = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.db_directory', '')]) + '/'
-    srcfiles_path = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.src_directory', '')]) + '/'
+    metafiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.db_directory', '')]) + '/'
+    srcfiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.src_directory', '')]) + '/'
     title = data.get('NAME', False)
     description = data.get('DESCRIPTION', False)
     ptype = data.get('TYPE', False)
@@ -178,14 +178,14 @@ def delete_item(self, identifier):
     # Prepare some values
     res = False
     msg = ''
-    metafiles_path = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.db_directory', '')]) + '/'
-    srcfiles_path = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.src_directory', '')]) + '/'
+    metafiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.db_directory', '')]) + '/'
+    srcfiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.src_directory', '')]) + '/'
     metafile_path = '' + metafiles_path + identifier
     # Get source file path
     matching = MAKEFLY_DBFILE_REGEX.match(identifier)
     source_file = ''
     if matching:
-        source_file = '/'.join([self.config.get('general.path', ''), self.config.get('makefly.src_directory', ''), matching.groups()[1] + self.config.get('makefly.src_extension', '')])
+        source_file = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.src_directory', ''), matching.groups()[1] + self.params.get('makefly.src_extension', '')])
     # Delete files (but only if source_file found)
     if source_file and path.exists(source_file):
         remove(metafile_path)
