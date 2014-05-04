@@ -168,7 +168,7 @@ def new_item(self, data):
     src_filename = path.basename(result[1])
     db_filename = path.basename(result[0])
     res = db_filename
-    # TODO: Add the post to the HYMBY list of posts
+    self.DBFILES.append(db_filename)
     return res, message
 
 def delete_item(self, identifier):

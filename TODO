@@ -2,7 +2,7 @@
 
 ## Bugs
 
-  * add a post doesn't update post list (/items)
+Not found.
 
 ## General
 
@@ -31,3 +31,4 @@
   * Permit to delete some posts
   * self.config redefinition for hymby object
   * Improve the configuration file read by using "ConfigDict()" class from bottle
+  * add a post doesn't update post list (/items)
