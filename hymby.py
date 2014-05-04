@@ -9,7 +9,14 @@ Copyright (c) 2014, Olivier DOSSMANN
 License: MIT (see LICENSE for details)
 """
 
-from bottle import Bottle, route, run, template, redirect, request, static_file
+from bottle import Bottle
+from bottle import route
+from bottle import run
+from bottle import template
+from bottle import redirect
+from bottle import request
+from bottle import static_file
+from bottle import ConfigDict
 from os import listdir, path
 from ConfigParser import SafeConfigParser as ConfigParser
 
@@ -50,12 +57,8 @@ def check_config():
         redirect('/install')
 
     # Read configuration file
-    conf = ConfigParser()
-    conf.read(hymby.params['filename'])
-    for section in conf.sections():
-        for key, value in conf.items(section):
-            key = section + '.' + key
-            hymby.params.update({key: value})
+    conf = ConfigDict().load_config(hymby.params['filename'])
+    hymby.params.update(conf)
     hymby.params.update({'checked': True}) # Configuration checked
 
     # TODO: Check if engine module exists regarding the configuration file ('engine' variable)
