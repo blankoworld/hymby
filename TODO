@@ -2,7 +2,6 @@
 
 ## General
 
-  * Add a LICENSE on Hymby
   * Make a tests directory
   * Learn how to test a bottlepy app
 
@@ -17,3 +16,4 @@
   * Migrate the item_data and item method into makefly
   * Use subprocess module of python to launch command in shell
   * Make possibility to create a new article (just create it with some info)
+  * Add a LICENSE on Hymby

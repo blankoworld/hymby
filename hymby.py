@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+Hymby stands for Host You MiniBlog Yourself. It aims to be a fast and
+ lightweight web application that permits to install and manage your
+ static weblog engine.
+
+Copyright (c) 2014, Olivier DOSSMANN
+License: MIT (see LICENSE for details)
+"""
+
 from bottle import Bottle, route, run, template, redirect, request, static_file
 from os import listdir, path
 from ConfigParser import SafeConfigParser as ConfigParser

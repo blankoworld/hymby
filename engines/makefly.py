@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+This file is part of Hymby static weblog engine management tool.
+
+Copyright (c) 2014, Olivier DOSSMANN
+License: MIT (see LICENSE for details)
+"""
+
+
 from os import listdir
 from os import path
 from re import sub
