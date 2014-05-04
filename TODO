@@ -11,6 +11,11 @@
   * Complete installation steps
   * Make possibility to edit an article
 
+## Miscellaneous
+
+  * Add a confirmation box to really delete an item
+  * Keep /item/<name> to see the result of a post content
+
 # DONE
 
   * Migrate the item_data and item method into makefly
