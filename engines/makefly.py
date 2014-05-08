@@ -51,6 +51,23 @@ def makefly_metadata(self, filepath):
             f.close()
     return variables
 
+def makefly_content(self, identifier):
+    """
+    Read the content of given item.
+    Return a string
+    """
+    # Fetch post content
+    matching = MAKEFLY_DBFILE_REGEX.match(identifier)
+    source_file = ''
+    content = ''
+    if matching:
+        source_file = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.src_directory', ''), matching.groups()[1] + self.params.get('makefly.src_extension', '')])
+    if source_file:
+        sf = open(source_file, 'r')
+        content = sf.read()
+        sf.close()
+    return content
+
 def get_items(self):
     '''
     Return the list of items from Makefly as a tuple list.
@@ -104,29 +121,23 @@ def get_item_metadata(self, identifier):
     metadata = makefly_metadata(self, metafile_path)
     return metadata
 
-def get_item_content(self, identifier):
+def get_item_content(self, identifier, transformed=True):
     """
-    Get the content of the given identifier
+    Get the content of the given identifier.
+    If transformed is False, then just give the content of the article.
+    If transformed is True, transform the content into HTML
     """
     # Some checks
     if not identifier:
         return ''
     # Prepare some value
-    content = ''
-    # Fetch post content
-    matching = MAKEFLY_DBFILE_REGEX.match(identifier)
-    source_file = ''
-    if matching:
-        source_file = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.src_directory', ''), matching.groups()[1] + self.params.get('makefly.src_extension', '')])
-    if source_file:
-        sf = open(source_file, 'r')
-        content = sf.read()
-        sf.close()
-    try:
-        mdwn = __import__('markdown')
-        content = mdwn.markdown(content)
-    except ImportError as e:
-        content = 'python-markdown is missing!'
+    content = makefly_content(self, identifier)
+    if transformed:
+        try:
+            mdwn = __import__('markdown')
+            content = mdwn.markdown(content)
+        except ImportError as e:
+            content = 'python-markdown is missing!'
     return content
 
 def new_item(self, data):
@@ -170,6 +181,20 @@ def new_item(self, data):
     res = db_filename
     self.DBFILES.append(db_filename)
     return res, message
+
+def edit_item(self, identifier, data):
+    """
+    Edit metadata and content of a given item
+    """
+    res = False
+    msg = ''
+    if not data:
+        return res, "No info given."
+    # TODO: Get metadata filepath
+    # TODO: Write changes in metadata file
+    # TODO: Get src filepath
+    # TODO: Write content in src filepath
+    return res, msg
 
 def delete_item(self, identifier):
     """

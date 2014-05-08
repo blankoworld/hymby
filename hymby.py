@@ -156,6 +156,47 @@ def new_item():
     else:
       return template('new_post.tpl', name='New post', title='Add a new post')
 
+def edit_item(name=False):
+    '''
+    Edit an item content.
+    If not item, return to the item list.
+    '''
+    check_config()
+    if not name:
+        redirect('/items')
+    data = {}
+    if request.POST.get('save', '').strip():
+        # Fetch info
+        r = request.POST
+        pname = r.getunicode('name', '').encode('utf-8').strip()
+        pdesc = r.getunicode('description', '').encode('utf-8').strip()
+        pdate = r.getunicode('date', '').encode('utf-8').strip()
+        ptype = r.getunicode('type', '').encode('utf-8').strip()
+        ptags = r.getunicode('tags', '').encode('utf-8').strip()
+        pkeyword = r.getunicode('keyword', '').encode('utf-8').strip()
+        pauthor = r.getunicode('author', '').encode('utf-8').strip()
+        pcontent = r.getunicode('content', '').encode('utf-8').strip()
+        # Create the new item
+        data.update({
+          'NAME': pname,
+          'DESCRIPTION': pdesc,
+          'DATE': pdate,
+          'TYPE': ptype,
+          'TAGS': ptags,
+          'KEYWORDS': pkeyword,
+          'AUTHOR': pauthor,
+          'CONTENT': pcontent,
+        })
+        res, msg = hymby.engine.edit_item(name, data)
+        if not res:
+            return template('errors.tpl', title='Warning', message_type='warning', message=msg)
+        redirect('/item/%s' % pid)
+    else:
+      # Read post content
+      details = hymby.engine.get_item_metadata(hymby, name)
+      content = hymby.engine.get_item_content(hymby, name, transformed=False)
+      return template('edit.tpl', name=name, title='Edition', forms=details, content=content)
+
 @hymby.route('/item/<name>')
 def item(name):
     '''
@@ -203,6 +244,7 @@ def error404(error='', error_type='none'):
 # SPECIAL routes
 hymby.route('/install', ['GET', 'POST'], install)
 hymby.route('/items/new', ['GET', 'POST'], new_item)
+hymby.route('/edit/<name>', ['GET', 'POST'], edit_item)
 
 # Run application
 #+ DEBUG   : should be set to False in production
