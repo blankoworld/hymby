@@ -151,7 +151,6 @@ def new_item(self, data):
     res = False
     message = ''
     metafiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.db_directory', '')]) + '/'
-    srcfiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.src_directory', '')]) + '/'
     title = data.get('NAME', False)
     description = data.get('DESCRIPTION', False)
     ptype = data.get('TYPE', False)
@@ -182,18 +181,49 @@ def new_item(self, data):
     self.DBFILES.append(db_filename)
     return res, message
 
-def edit_item(self, identifier, data):
+def edit_item(self, identifier, data=False):
     """
     Edit metadata and content of a given item
     """
     res = False
     msg = ''
+    # Some checks
     if not data:
         return res, "No info given."
-    # TODO: Get metadata filepath
-    # TODO: Write changes in metadata file
-    # TODO: Get src filepath
-    # TODO: Write content in src filepath
+    print data
+    # Mandatories fields
+    for field in ['NAME', 'CONTENT']:
+        if not data.get(field, False):
+            return res, "'%s' field is mandatory!" % field
+    # Prepare some values
+    metafiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.db_directory', '')]) + '/'
+    srcfiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.src_directory', '')]) + '/'
+    metafile = '' + metafiles_path + identifier
+    source_file = ''
+    # Get source file path
+    matching = MAKEFLY_DBFILE_REGEX.match(identifier)
+    if matching:
+        source_file = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.src_directory', ''), matching.groups()[1] + self.params.get('makefly.src_extension', '')])
+    else:
+        return res, 'Regex problem on this item ID: %s' % identifier
+    if not source_file:
+        msg = 'No source file found!'
+    # Write changes in metadata file
+    with open(metafile, 'w') as mfile:
+        for param in data:
+            # Specific behaviours
+            if param in ['CONTENT', 'DATE']:
+                continue
+            if param == 'NAME':
+                param = 'TITLE'
+            mfile.write('%s = %s\n' % (param, data[param]))
+        mfile.close()
+    # Write content in src filepath
+    if 'CONTENT' in data and data.get('CONTENT', False):
+        with open(source_file, 'w') as sfile:
+            sfile.write(data['CONTENT'])
+            sfile.close()
+    res = True
     return res, msg
 
 def delete_item(self, identifier):
@@ -204,7 +234,6 @@ def delete_item(self, identifier):
     res = False
     msg = ''
     metafiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.db_directory', '')]) + '/'
-    srcfiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.src_directory', '')]) + '/'
     metafile_path = '' + metafiles_path + identifier
     # Get source file path
     matching = MAKEFLY_DBFILE_REGEX.match(identifier)

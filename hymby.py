@@ -187,10 +187,10 @@ def edit_item(name=False):
           'AUTHOR': pauthor,
           'CONTENT': pcontent,
         })
-        res, msg = hymby.engine.edit_item(name, data)
+        res, msg = hymby.engine.edit_item(hymby, name, data)
         if not res:
             return template('errors.tpl', title='Warning', message_type='warning', message=msg)
-        redirect('/item/%s' % pid)
+        redirect('/item/%s' % name)
     else:
       # Read post content
       details = hymby.engine.get_item_metadata(hymby, name)
