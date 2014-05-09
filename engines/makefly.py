@@ -211,12 +211,14 @@ def edit_item(self, identifier, data=False):
     # Write changes in metadata file
     with open(metafile, 'w') as mfile:
         for param in data:
+            new_key = param
+            new_value = data[param]
             # Specific behaviours
             if param in ['CONTENT', 'DATE']:
                 continue
             if param == 'NAME':
-                param = 'TITLE'
-            mfile.write('%s = %s\n' % (param, data[param]))
+                new_key = 'TITLE'
+            mfile.write('%s = %s\n' % (new_key, new_value))
         mfile.close()
     # Write content in src filepath
     if 'CONTENT' in data and data.get('CONTENT', False):
