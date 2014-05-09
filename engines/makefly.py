@@ -135,7 +135,7 @@ def get_item_content(self, identifier, transformed=True):
     if transformed:
         try:
             mdwn = __import__('markdown')
-            content = mdwn.markdown(content)
+            content = mdwn.markdown(content.decode('utf-8'))
         except ImportError as e:
             content = 'python-markdown is missing!'
     return content
