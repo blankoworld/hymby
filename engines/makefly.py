@@ -51,7 +51,7 @@ def makefly_metadata(self, filepath):
             f.close()
     return variables
 
-def makefly_content(self, identifier):
+def makefly_content(self, identifier, limit=False):
     """
     Read the content of given item.
     Return a string
@@ -64,7 +64,10 @@ def makefly_content(self, identifier):
         source_file = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.src_directory', ''), matching.groups()[1] + self.params.get('makefly.src_extension', '')])
     if source_file:
         sf = open(source_file, 'r')
-        content = sf.read()
+        if not limit:
+            content = sf.read()
+        else:
+            content = ''.join(sf.readlines(limit))
         sf.close()
     return content
 
@@ -91,7 +94,13 @@ def get_items(self):
         if metadata:
             title = metadata.get('TITLE', 'Untitled')
             description = metadata.get('DESCRIPTION', 'No description available')
-            result.append((f, title, description))
+            content = makefly_content(self, f, limit=15)
+            try:
+                mdwn = __import__('markdown')
+                content = mdwn.markdown(content.decode('utf-8'))
+            except ImportError as e:
+                content = 'python-markdown is missing!'
+            result.append((f, title, description, content))
     return result
 
 def item_exists(self, identifier):

@@ -1,4 +1,13 @@
 % include('header.tpl')
-<h3>{{ title }}</h3>
-<p class="{{ message_type }}">{{ message }}</p>
+  <article id="error">
+    <header>
+      <h1>{{ title }}</h1>
+    </header>
+    <section id="{{ message_type }}">
+      <p class="{{ message_type }}">{{ message }}</p>
+    </section>
+    <footer>
+      <p>&nbsp;</p>
+    </footer>
+  </article>
 % include('footer.tpl')

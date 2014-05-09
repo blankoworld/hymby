@@ -1,0 +1,194 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #cccccc;
+  font-family: Georgia, Palatino, serif;
+}
+aside {
+  position: absolute;
+  display: block;
+  top: 5px;
+  left: 5px;
+  z-index: 1
+}
+aside a {
+    color: #000000;
+}
+aside a:hover {
+    color: #000000;
+}
+aside a:visited {
+    color: #000000;
+}
+a {
+    color: #0099ff;
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+a:hover {
+    text-decoration: none;
+    color: #0000ff;
+}
+a:visited {
+    color: purple;
+}
+header {
+  position: relative;
+  clear: both;
+}
+header h1 {
+  text-align: center;
+  margin: 0;
+  font-size: 28px;
+}
+header h1 input {
+    width: 50%;
+}
+header a {
+    text-decoration: none;
+}
+header a:visited {
+    color: #000000;
+}
+header.main {
+    z-index: 0;
+}
+header p#subtitle {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+footer {
+  width: 85%;
+  margin: 0 auto;
+  text-align: right;
+}
+footer hr {
+  display: none;
+  margin-top: 2%;
+  width: 50%;
+}
+#content {
+  width: 90%;
+  margin: 0 auto;
+  padding: 0.5%;
+  min-height: 300px;
+}
+article#error {
+    padding: 0;
+    margin: 0;
+}
+section#warning {
+    padding: 5px;
+    background-color: #fcfce9;
+    color: #494949;
+    border-bottom: thin solid #000000;
+}
+section#error {
+    padding: 5px;
+    background-color: #ffdfdf;
+    color: #494949;
+    border-bottom: thin solid #000000;
+}
+article {
+   margin: 0 0 2% 0;
+   padding: 0;
+   background-color: #eeeeee;
+   -moz-border-radius: 7px;
+   border-radius: 7px;
+   -moz-box-shadow: 1px 1px 13px #000;
+   -webkit-box-shadow: 1px 1px 13px #000;
+   box-shadow: 1px 1px 13px #000;
+}
+article h1 {
+    margin: 0;
+    line-height: 50px;
+    border-bottom: thin solid #999999;
+}
+article h1 input#name {
+    background-color: #eeeeee;
+    border: none;
+    text-align: center;
+    width: 100%;
+    padding: 0;
+}
+article h1 a {
+   text-decoration: none;
+   color: #000;
+}
+article a.delete {
+    width: auto;
+    display: block;
+    right: 0;  
+    color: #000000;
+    float: right;
+}
+article#edit post, input#name {
+    font-weight: bold;
+    font-size: 18px;
+}
+article a.edition-title {
+    display: block;
+    float: left;
+    color: #000000;
+}
+article section.excerpt {
+    padding: 0 5px;
+}
+article section#metadata {
+    display: none;
+}
+article section#content {
+    padding: 0;
+    width: 100%;
+}
+article section#content textarea {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+article footer {
+    clear: both;
+    margin: 10px;
+}
+article a.edition {
+    display: block;
+    text-align: left;
+    color: #000000;
+    padding: 0;
+}
+label
+{
+  display: block;
+  width: 150px;
+  float: left;
+}
+input#save {
+    text-align: auto;
+    width: 100%;
+    text-transform: uppercase;
+    font-weight: bold;
+    border: none;
+    border-top: thin solid #000000;
+    background-color: #ffffff;
+}
+#dev {
+  color: orange;
+  font-weight: bold;
+}
+a#new {
+    display: block;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: bold;
+    color: #000000;
+}
+
+a#new article {
+    padding: 1%;
+}

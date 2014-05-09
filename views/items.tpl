@@ -1,8 +1,26 @@
 % include('header.tpl', title='Items')
-<h3>Posts</h3>
 <ul>
+  <a id="new" href="/items/new" title="Create a new post">
+    <article>
+      <header>
+        <p>Create a new post</p>
+      </header>
+    </article>
+  </a>
 % for item in items:
-  <li><a href="/delete/{{item[0]}}" title=""><img src="/static/edit-delete.png" alt="delete"/></a> <a href="/edit/{{item[0]}}" title="{{item[2]}}">{{item[1]}}</a></li>
+  <article>
+    <header>
+      <a class="delete" href="/delete/{{item[0]}}" title="Delete permanently: {{item[1]}}"><span class="fa-stack fa-lg"><i class="fa fa-times fa-stack-1x"></i></span></a><a class="edition-title" href="/edit/{{item[0]}}" title="Edit: {{item[1]}}"><span class="fa-stack fa-lg"><i class="fa fa-pencil-square-o fa-stack-1x"></i></span></a>
+      <h1 class="entry-title"><a href="/edit/{{item[0]}}" title="{{item[2]}}">{{item[1]}}</a></h1>
+    </header>
+    <section class="excerpt">
+      {{!item[3]}}
+    </section>
+    <footer>
+      <p>&nbsp;</p>
+    </footer>
+    <a class="edition" href="/edit/{{item[0]}}" title="Edit: {{item[1]}}"><span class="fa-stack fa-lg"><i class="fa fa-pencil-square-o fa-stack-1x"></i></span></a>
+  </article>
 % end
 </ul>
 % include('footer.tpl')
