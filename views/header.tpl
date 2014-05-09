@@ -83,6 +83,22 @@
     border: thin solid gray;
     color: #494949;
   }
+  p.warning {
+    background-color: #FCFCE9;
+    width: 98%;
+    margin: 5px auto;
+    padding: 1%;
+    border: thin solid gray;
+    color: #494949;
+  }
+  p.error {
+    background-color: #FFDFDF;
+    width: 98%;
+    margin: 5px auto;
+    padding: 1%;
+    border: thin solid gray;
+    color: #494949;
+  }
   label
   {
     display: block;
