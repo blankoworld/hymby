@@ -88,7 +88,8 @@ def get_items(self):
         metafiles_extension = self.params.get('makefly.db_extension', '')
         files = makefly_metafiles(self, metafiles_path, metafiles_extension)
     # Search post's info
-    for f in files:
+    # Sort list by timestamp. As files contains name with timestamp, just use files list to do the sort.
+    for f in sorted(files, reverse=True):
         metafile_path = '' + metafiles_path + f
         metadata = makefly_metadata(self, metafile_path)
         if metadata:
