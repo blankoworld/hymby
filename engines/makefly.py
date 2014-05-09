@@ -149,15 +149,14 @@ def get_item_content(self, identifier, transformed=True):
             content = 'python-markdown is missing!'
     return content
 
-def new_item(self, data):
+def new_item(self, data, content):
     """
-    Create a new item with info in data
+    Create a new item with info in data and post's content in content variable
     """
     # Some checks
     if not data:
         return False, 'No data specified'
     # Prepare some values
-    res = False
     message = ''
     metafiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.db_directory', '')]) + '/'
     title = data.get('NAME', False)
@@ -184,11 +183,16 @@ def new_item(self, data):
     if not stdout[0].startswith('Metafile: '):
         return False, "Makefly's error: %s" % stdout[0]
     result = stdout[0].split('\n')
-    src_filename = path.basename(result[1])
     db_filename = path.basename(result[0])
-    res = db_filename
+    if content:
+        src_filename = path.basename(result[1])
+        srcfile_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.src_directory', ''), src_filename])
+        with open(srcfile_path, 'w') as srcfile:
+            srcfile.write(content)
+            srcfile.close()
+    # Add new item to list of posts
     self.DBFILES.append(db_filename)
-    return res, message
+    return db_filename, message
 
 def edit_item(self, identifier, data=False):
     """
@@ -206,7 +210,6 @@ def edit_item(self, identifier, data=False):
             return res, "'%s' field is mandatory!" % field
     # Prepare some values
     metafiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.db_directory', '')]) + '/'
-    srcfiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.src_directory', '')]) + '/'
     metafile = '' + metafiles_path + identifier
     source_file = ''
     # Get source file path

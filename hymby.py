@@ -139,6 +139,7 @@ def new_item():
         ptags = r.getunicode('tags', '').encode('utf-8').strip()
         pkeyword = r.getunicode('keyword', '').encode('utf-8').strip()
         pauthor = r.getunicode('author', '').encode('utf-8').strip()
+        pcontent = r.getunicode('content', '').encode('utf-8').strip()
         # Create the new item
         data.update({
           'NAME': pname,
@@ -149,7 +150,7 @@ def new_item():
           'KEYWORDS': pkeyword,
           'AUTHOR': pauthor,
         })
-        pid, msg = hymby.engine.new_item(hymby, data)
+        pid, msg = hymby.engine.new_item(hymby, data, pcontent)
         if not pid:
             return template('errors.tpl', title='Warning', message_type='warning', message=msg)
         redirect('/item/%s' % pid)
