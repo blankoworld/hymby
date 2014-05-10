@@ -234,9 +234,9 @@ def delete_item(name):
 def send_static(filename):
     return static_file(filename, root='./static/')
 
-@hymby.route('/markitup/<filename:path>')
+@hymby.route('/fonts/<filename:path>')
 def send_static_markitup(filename):
-    return static_file(filename, root='./static/markitup/')
+    return static_file(filename, root='./static/fonts/')
 
 # ERRORS
 @hymby.error(404)
