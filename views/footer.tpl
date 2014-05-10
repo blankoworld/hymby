@@ -20,6 +20,9 @@ $(function() {
       $preview.html(convert($textarea.val()));
       }).trigger('keyup');
     });
+$('.delete').on('click', function () {
+      return confirm('Are you sure?');
+    });
 </script>
 </body>
 </html>
