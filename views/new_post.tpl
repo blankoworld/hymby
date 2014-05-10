@@ -13,10 +13,8 @@
         <label for='author'>Author:</label><input type="text" maxlength="64" name='author' id='author'><br />
     </section>
     <section id="content">
-        <textarea name="content" rows="20" id="markdown"></textarea>
-  <textarea id="html" class="full-height"></textarea>
-  <div id="preview" class="full-height"></div>
-</section>
+        <textarea name="content" rows="20"></textarea>
+    </section>
     <input type="submit" name="save" value="Save" id="save">
   </article>
 </form>
