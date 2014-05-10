@@ -14,7 +14,9 @@
     </section>
     <section id="content">
         <textarea name="content" rows="20" id="markdown"></textarea>
-    </section>
+  <textarea id="html" class="full-height"></textarea>
+  <div id="preview" class="full-height"></div>
+</section>
     <input type="submit" name="save" value="Save" id="save">
   </article>
 </form>

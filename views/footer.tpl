@@ -6,15 +6,8 @@
   </footer>
 
 <script type="text/javascript" src="/static/jquery.js"></script>
-<script type="text/javascript" src="/markitup/jquery.markitup.js"></script>
-<script type="text/javascript" src="/markitup/sets/markdown/set.js"></script>
-
-<script language="javascript">
-  $(document).ready(function()  {
-    $('#markdown').markItUp(mySettings);
-  });
-</script>
-
+<script src="/static/js/main.js"></script>
+<script src="/static/js/showdown.js"></script>
 
 </body>
 </html>

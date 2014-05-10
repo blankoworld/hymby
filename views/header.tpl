@@ -8,9 +8,9 @@
   <title>Hymby - {{ title }}</title>
   <meta name="viewport" content="width=device-width">
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="/markitup/skins/markitup/style.css" />
-  <link rel="stylesheet" type="text/css" href="/markitup/sets/markdown/style.css" />
-  <link type="text/css" rel="stylesheet" media="screen" href="/static/main.css" title="Default" />
+    <link rel="stylesheet" href="/static/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/static/css/ionicons.css" type="text/css">
+<link type="text/css" rel="stylesheet" media="screen" href="/static/main.css" title="Default" />
 </head>
 <body>
 
