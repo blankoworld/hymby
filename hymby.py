@@ -229,6 +229,32 @@ def delete_item(name):
     else:
         return template('errors.tpl', title='Error', message_type='error', message=msg)
 
+@hymby.route('/help')
+def go_to_help():
+    redirect('/help/en')
+
+@hymby.route('/help/<language>')
+def help(language='en'):
+    """
+    Display given help page.
+    If language not found, return 404 page.
+    """
+    content = ''
+    helppath = './doc/README.%s.md' % (language)
+    if path.exists(helppath):
+        with open(helppath, 'r+') as f:
+            content = f.read()
+            f.close()
+    else:
+        content = "No help found! You're alone..."
+    if content:
+        try:
+            mdwn = __import__('markdown')
+            content = mdwn.markdown(content.decode('utf-8'))
+        except ImportError as e:
+            content = 'python-markdown module missing!'
+    return template('help.tpl', title='Help', content=content)
+
 # STATIC routes
 @hymby.route('/static/<filename:path>')
 def send_static(filename):

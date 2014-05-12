@@ -13,7 +13,10 @@
 <body id="fullscreen">
 
   <aside id="navigation">
-    <a href="/config"><i class="fa fa-cog fa-stack-2x"></i></span></a>
+    <ol>
+      <li><a href="/config"><span><i class="fa fa-cog fa-stack-2x fa-fw"></i></span></a></li>
+      <li><a href="/help"><span><i class="fa fa-info-circle fa-stack-2x fa-fw"></i></span></a></li>
+    </ol>
   </aside>
 
   <header id="main">
