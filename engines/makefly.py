@@ -13,8 +13,10 @@ from os import remove
 from re import sub
 from re import compile as recompile
 from subprocess import Popen, PIPE
+from itertools import islice
 
 MAKEFLY_DBFILE_REGEX = recompile('(?P<timestamp>\d+),(?P<basename>.*)(?P<extension>\.mk)')
+MAKEFLY_POST_LIMIT = 15
 
 def makefly_metafiles(self, pathname, extension):
     '''
@@ -63,13 +65,20 @@ def makefly_content(self, identifier, limit=False):
     if matching:
         source_file = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.src_directory', ''), matching.groups()[1] + self.params.get('makefly.src_extension', '')])
     if source_file:
-        sf = open(source_file, 'r')
-        if not limit:
-            content = sf.read()
-        else:
-            content = ''.join(sf.readlines(limit))
-        sf.close()
+        with open(source_file, 'r') as sf:
+            if not limit:
+                content = sf.read()
+            else:
+                content = ''.join(list(islice(sf,limit)))
+            sf.close()
     return content
+
+def do_replacements(self, string):
+    """
+    Make some replacements in given string.
+    """
+    # Change value of BLOG_URL by another value
+    return string.replace("${BLOG_URL}", '/engine')
 
 def get_items(self):
     '''
@@ -95,7 +104,8 @@ def get_items(self):
         if metadata:
             title = metadata.get('TITLE', 'Untitled')
             description = metadata.get('DESCRIPTION', 'No description available')
-            content = makefly_content(self, f, limit=15)
+            content = makefly_content(self, f, limit=MAKEFLY_POST_LIMIT)
+            content = do_replacements(self, content)
             try:
                 mdwn = __import__('markdown')
                 content = mdwn.markdown(content.decode('utf-8'))
@@ -131,11 +141,12 @@ def get_item_metadata(self, identifier):
     metadata = makefly_metadata(self, metafile_path)
     return metadata
 
-def get_item_content(self, identifier, transformed=True):
+def get_item_content(self, identifier, transformed=True, replacements=False):
     """
     Get the content of the given identifier.
     If transformed is False, then just give the content of the article.
-    If transformed is True, transform the content into HTML
+    If transformed is True, transform the content into HTML.
+    Do some replacements using do_replacement method if asked.
     """
     # Some checks
     if not identifier:
@@ -148,6 +159,8 @@ def get_item_content(self, identifier, transformed=True):
             content = mdwn.markdown(content.decode('utf-8'))
         except ImportError as e:
             content = 'python-markdown is missing!'
+    if replacements:
+        return do_replacements(self, content)
     return content
 
 def new_item(self, data, content):
@@ -204,7 +217,6 @@ def edit_item(self, identifier, data=False):
     # Some checks
     if not data:
         return res, "No info given."
-    print data
     # Mandatories fields
     for field in ['NAME', 'CONTENT']:
         if not data.get(field, False):

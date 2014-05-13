@@ -36,6 +36,7 @@ makefly_config = {
     'makefly.src_extension': '.md',
     'makefly.db_directory': 'db',
     'makefly.src_directory': 'src',
+    'makefly.static_directory': 'static',
 }
 hymby.params.update(makefly_config)
 
@@ -210,7 +211,7 @@ def item(name):
     # if no details, return to /items
     if not details:
         redirect('/items')
-    return template('item.tpl', content=hymby.engine.get_item_content(hymby, name), name=details.get('TITLE', ''), title=details.get('TITLE', ''))
+    return template('item.tpl', content=hymby.engine.get_item_content(hymby, name, replacements=True), name=details.get('TITLE', ''), title=details.get('TITLE', ''))
 @hymby.route('/delete/<name>')
 def delete_item(name):
     """
@@ -264,6 +265,11 @@ def send_static(filename):
 @hymby.route('/fonts/<filename:path>')
 def send_static_markitup(filename):
     return static_file(filename, root='./static/fonts/')
+
+@hymby.route('/engine/<filename:path>')
+def send_static_engine(filename):
+    static_path = '/'.join([hymby.params.get('general.path', ''), hymby.params.get('makefly.static_directory', '')])
+    return static_file(filename, root=static_path)
 
 # ERRORS
 @hymby.error(404)
