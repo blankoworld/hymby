@@ -242,7 +242,7 @@ def help(language='en'):
     content = ''
     helppath = './doc/README.%s.md' % (language)
     if path.exists(helppath):
-        with open(helppath, 'r+') as f:
+        with open(helppath, 'r') as f:
             content = f.read()
             f.close()
     else:
