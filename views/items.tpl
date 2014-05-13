@@ -10,7 +10,7 @@
 <article>
   <header>
     <a class="delete" href="/delete/{{item[0]}}" title="Delete permanently: {{item[1]}}"><span class="fa-stack fa-lg"><i class="fa fa-times fa-stack-1x"></i></span></a><a class="edition-title" href="/edit/{{item[0]}}" title="Edit: {{item[1]}}"><span class="fa-stack fa-lg"><i class="fa fa-pencil-square-o fa-stack-1x"></i></span></a>
-    <h1 class="entry-title"><a href="/edit/{{item[0]}}" title="{{item[2]}}">{{item[1]}}</a></h1>
+    <h1 class="entry-title"><a href="/item/{{item[0]}}" title="{{item[2]}}">{{item[1]}}</a></h1>
   </header>
   <section class="excerpt">
     {{!item[3]}}
