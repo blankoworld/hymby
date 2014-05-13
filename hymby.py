@@ -17,10 +17,11 @@ from bottle import redirect
 from bottle import request
 from bottle import static_file
 from bottle import ConfigDict
+from bottle import default_app
 from os import listdir, path
 from ConfigParser import SafeConfigParser as ConfigParser
 
-hymby = Bottle()
+hymby = application = Bottle()
 hymby.params = {}
 # General configuration
 general_config = {
@@ -280,4 +281,5 @@ hymby.route('/edit/<name>', ['GET', 'POST'], edit_item)
 # Run application
 #+ DEBUG   : should be set to False in production
 #+ RELOADER: idem
-hymby.run(host='0.0.0.0', port=8080, debug=True, reloader=True)
+if __name__ == '__main__':
+    hymby.run(host='0.0.0.0', port=8080, debug=True, reloader=True)
