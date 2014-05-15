@@ -6,33 +6,52 @@ html, body {
   background-color: #cccccc;
   font-family: Georgia, Palatino, serif;
 }
-aside {
+aside#navigation {
   position: absolute;
   display: block;
-  top: 5px;
-  left: 5px;
-  z-index: 1
+  top: 0;
+  right: 0;
+  height: 30px;
+  width: 60px;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
 }
-aside ol {
-    display: block;
+aside#navigation ol {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
-aside ol li {
+aside#navigation ol li {
+    height: 30px;
+    width: 20px;
     float: left;
 }
-aside ol li a span i.fa-info-circle {
-    margin-left: 30px;
+aside#navigation ol li a {
+    display: block;
+    margin: 0;
+    padding: 0;
+    height: 30px;
+    width: 20px;
 }
-aside ol li a {
+aside#navigation ol li a i {
+    margin: 0;
+    padding: 0;
+}
+aside#navigation ol li a i.fa-info-circle {
+}
+aside#navigation ol li a i.fa-home {
+}
+aside#navigation ol li a i.fa-cog {
+}
+aside#navigation ol li a {
     display: block;
     color: #000000;
 }
-aside ol li a:hover {
+aside#navigation ol li a:hover {
     color: #000000;
 }
-aside ol li a:visited {
+aside#navigation ol li a:visited {
     color: #000000;
 }
 a {

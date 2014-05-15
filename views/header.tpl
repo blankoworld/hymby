@@ -14,8 +14,9 @@
 
   <aside id="navigation">
     <ol>
-      <li><a href="/config"><span><i class="fa fa-cog fa-stack-2x fa-fw"></i></span></a></li>
-      <li><a href="/help"><span><i class="fa fa-info-circle fa-stack-2x fa-fw"></i></span></a></li>
+      <li><a href="/" title="Homepage"><i class="fa fa-home fa-fw"></i></a></li>
+      <li><a href="/config" title="Configuration"><i class="fa fa-cog fa-fw"></i></a></li>
+      <li><a href="/help" title="About"><i class="fa fa-info-circle fa-fw"></i></a></li>
     </ol>
   </aside>
 
