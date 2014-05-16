@@ -142,6 +142,7 @@ article {
 }
 article h1 {
     margin: 0;
+    font-size: 23px;
     line-height: 50px;
     border-bottom: thin solid #999999;
 }

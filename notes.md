@@ -11,12 +11,12 @@ FAIT | * Plus d'espace entre le premier titre et le "create a new post"
 
 # Articles
 
-* Titre à gauche
-* Titre moins grand (même taille que "Introduction h3" de l'article)
-* Titre en couleur (palette)
+FAIT | * Titre à gauche
+FAIT | * Titre moins grand (même taille que "Introduction h3" de l'article)
+FAIT | * Titre en couleur (palette)
 * Ajouter la date de publication de l'article sous l'article lui-même (pas dans le blanc à chier). En petit à gauche ou droite (comme je veux sachant que Ines dit à gauche)
 * bouton d'édition de l'article, en haut à droite
-* Titre de l'article dans une autre couleur qui montre que c'est un lien. Au passage sur le titre, changer de couleur (palette/charte).
+FAIT | * Titre de l'article dans une autre couleur qui montre que c'est un lien. Au passage sur le titre, changer de couleur (palette/charte).
 
 # Compilation
 
