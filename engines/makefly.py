@@ -10,6 +10,7 @@ License: MIT (see LICENSE for details)
 from os import listdir
 from os import path
 from os import remove
+from os import environ
 from re import sub
 from re import compile as recompile
 from subprocess import Popen, PIPE
@@ -94,13 +95,13 @@ def refresh(self, errorfile):
     #+ We have to wait 1 second before refreshing.
     sleep(1)
     # Prepare some values
+    env = environ
+    env.update({'conf': 'makefly.rc'})
+    env.update({'MAKEOBJDIR': './'})
     blogdir = self.params.get('general.path')
-    makeobjdir = blogdir
-    conf = 'makefly.rc'
-    makefile = '/'.join([blogdir, 'Makefile'])
     logging.basicConfig(filename=errorfile, format=logging.BASIC_FORMAT)
-    clean = Popen(['pmake', 'clean', '-f', makefile], stdout=PIPE, env={'MAKEOBJDIR': makeobjdir, 'conf': conf})
-    generation = Popen(['pmake', '-f', makefile], stdout=PIPE, env={'MAKEOBJDIR': makeobjdir, 'conf': conf, 'CURDIR': makeobjdir})
+    clean = Popen(['pmake', 'clean', '-f', 'Makefile'], stdout=PIPE, stderr=PIPE, env=env, cwd=blogdir)
+    generation = Popen(['pmake', '-f', 'Makefile'], stdout=PIPE, stderr=PIPE, env=env, cwd=blogdir)
     # Launch clean up then generation
     stdout = ()
     stdout2 = ()
@@ -115,10 +116,10 @@ def refresh(self, errorfile):
         logging.exception("Popen generation error")
         return False, e
     if stdout and len(stdout) > 1 and stdout[1]:
-        logging.error('Blog clean up failed!', stdout[1])
+        logging.error(stdout[1])
         return False, 'Blog clean up failed!'
-    if stdout2 and len(stdout) > 1 and stdout[1]:
-        logging.error('Blog generation failed!', stdout[1])
+    if stdout2 and len(stdout2) > 1 and stdout2[1]:
+        logging.error(stdout2[1])
         return False, 'Blog generation failed!'
     return True
 
