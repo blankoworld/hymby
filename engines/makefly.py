@@ -14,6 +14,8 @@ from re import sub
 from re import compile as recompile
 from subprocess import Popen, PIPE
 from itertools import islice
+import logging
+from time import sleep
 
 MAKEFLY_DBFILE_REGEX = recompile('(?P<timestamp>\d+),(?P<basename>.*)(?P<extension>\.mk)')
 MAKEFLY_POST_LIMIT = 15
@@ -79,6 +81,46 @@ def do_replacements(self, string):
     """
     # Change value of BLOG_URL by another value
     return string.replace("${BLOG_URL}", '/engine')
+
+def refresh(self, errorfile):
+    """
+    Recompile all the entire blog.
+    Put the result into a log file.
+    """
+    # BUG FROM MAKEFLY WITH HYMBY: The refresh method is called at the same time than the post creation.
+    #+ This way, the new post have the same date as the compilation.
+    #+ In Makefly, we don't compile posts that are in the future and in the present (a kind of crazy time machine :p)
+    # So Makefly doesn't add the new created post because of Python/Bottle/Lua are too fast.
+    #+ We have to wait 1 second before refreshing.
+    sleep(1)
+    # Prepare some values
+    blogdir = self.params.get('general.path')
+    makeobjdir = blogdir
+    conf = 'makefly.rc'
+    makefile = '/'.join([blogdir, 'Makefile'])
+    logging.basicConfig(filename=errorfile, format=logging.BASIC_FORMAT)
+    clean = Popen(['pmake', 'clean', '-f', makefile], stdout=PIPE, env={'MAKEOBJDIR': makeobjdir, 'conf': conf})
+    generation = Popen(['pmake', '-f', makefile], stdout=PIPE, env={'MAKEOBJDIR': makeobjdir, 'conf': conf, 'CURDIR': makeobjdir})
+    # Launch clean up then generation
+    stdout = ()
+    stdout2 = ()
+    try:
+        stdout = clean.communicate()
+    except Exception as e:
+        logging.exception("Popen clean up error")
+        return False, e
+    try:
+        stdout2 = generation.communicate()
+    except Exception as e:
+        logging.exception("Popen generation error")
+        return False, e
+    if stdout and len(stdout) > 1 and stdout[1]:
+        logging.error('Blog clean up failed!', stdout[1])
+        return False, 'Blog clean up failed!'
+    if stdout2 and len(stdout) > 1 and stdout[1]:
+        logging.error('Blog generation failed!', stdout[1])
+        return False, 'Blog generation failed!'
+    return True
 
 def get_items(self):
     '''
@@ -177,6 +219,7 @@ def new_item(self, data, content):
     description = data.get('DESCRIPTION', False)
     ptype = data.get('TYPE', False)
     author = data.get('AUTHOR', False)
+    # TODO: examine date in order to not have a wrong value
     date = data.get('DATE', False)
     tags = data.get('TAGS', False)
     keyword = data.get('KEYWORDS', False)

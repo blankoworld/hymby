@@ -20,7 +20,7 @@ FAIT | * Titre de l'article dans une autre couleur qui montre que c'est un lien.
 
 # Compilation
 
-* À chaque modification, lancer en tâche de fond la recompilation :
+FAIT | * À chaque modification, lancer en tâche de fond la recompilation :
   * Au moment du save d'un nouvel article
   * Au moment de la suppression d'un article
   * Au moment de l'édition

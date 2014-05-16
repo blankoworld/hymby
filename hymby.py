@@ -18,15 +18,18 @@ from bottle import request
 from bottle import static_file
 from bottle import ConfigDict
 from bottle import default_app
-from os import listdir, path
+from os import listdir
+from os import path
 from ConfigParser import SafeConfigParser as ConfigParser
+from threading import Thread
 
 hymby = application = Bottle()
 hymby.params = {}
 # General configuration
 general_config = {
     'filename': 'hymbyrc',
-    'checked': False
+    'checked': False,
+    'refresh_errors': 'refresh_errors.log',
 }
 hymby.params.update(general_config)
 
@@ -155,6 +158,9 @@ def new_item():
         pid, msg = hymby.engine.new_item(hymby, data, pcontent)
         if not pid:
             return template('errors.tpl', title='Warning', message_type='warning', message=msg)
+        # If all is OK, refresh blog
+        t = Thread(group=None, target=hymby.engine.refresh, name=None, args=(hymby, hymby.params.get('refresh_errors')))
+        t.start()
         redirect('/item/%s' % pid)
     else:
       return template('new_post.tpl', name='New post', title='Add a new post')
@@ -193,6 +199,9 @@ def edit_item(name=False):
         res, msg = hymby.engine.edit_item(hymby, name, data)
         if not res:
             return template('errors.tpl', title='Warning', message_type='warning', message=msg)
+        # If all is OK, refresh blog
+        t = Thread(group=None, target=hymby.engine.refresh, name=None, args=(hymby, hymby.params.get('refresh_errors')))
+        t.start()
         redirect('/item/%s' % name)
     else:
       # Read post content
@@ -227,6 +236,9 @@ def delete_item(name):
     # otherwise delete items and return to item list
     result, msg = hymby.engine.delete_item(hymby, name)
     if result:
+        # If all is OK, refresh blog
+        t = Thread(group=None, target=hymby.engine.refresh, name=None, args=(hymby, hymby.params.get('refresh_errors')))
+        t.start()
         redirect('/items')
     else:
         return template('errors.tpl', title='Error', message_type='error', message=msg)

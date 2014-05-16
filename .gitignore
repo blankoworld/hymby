@@ -2,3 +2,4 @@ hosted_engine/*
 hymbyrc
 info.pl
 *.pyc
+refresh_errors.log
