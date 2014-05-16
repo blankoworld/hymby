@@ -211,7 +211,7 @@ def item(name):
     # if no details, return to /items
     if not details:
         redirect('/items')
-    return template('item.tpl', identifier=name, content=hymby.engine.get_item_content(hymby, name, replacements=True), data=details, title=details.get('TITLE', ''))
+    return template('single.tpl', identifier=name, content=hymby.engine.get_item_content(hymby, name, replacements=True), data=details, title=details.get('TITLE', ''))
 @hymby.route('/delete/<name>')
 def delete_item(name):
     """

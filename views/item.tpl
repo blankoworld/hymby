@@ -1,15 +1,16 @@
-% include('header.tpl')
 <article>
   <header>
-    <a class="delete" href="/delete/{{identifier}}" title="Delete permanently: {{data.get('TITLE', '')}}"><span class="fa-stack fa-lg"><i class="fa fa-times fa-stack-1x"></i></span></a><a class="edition-title" href="/edit/{{identifier}}" title="Edit: {{data.get('TITLE', '')}}"><span class="fa-stack fa-lg"><i class="fa fa-pencil-square-o fa-stack-1x"></i></span></a>
-    <h1 class="entry-title">{{data.get('TITLE', '')}}</a></h1>
+    <ol class="actions">
+      <li><a class="delete" href="/delete/{{ identifier }}" title="Delete permanently: {{ name }}"><i class="fa fa-times fa-fw"></i></a></li>
+      <li><a class="edition-title" href="/edit/{{ identifier }}" title="Edit: {{ name }}"><i class="fa fa-pencil-square-o fa-fw"></i></a></li>
+    </ol>
+    <h1 class="entry-title"><a href="/item/{{ identifier }}" title="{{ description }}">{{ name }}</a></h1>
   </header>
   <section class="excerpt">
-    {{!content}}
+    {{ !content }}
   </section>
   <footer>
     <p>&nbsp;</p>
   </footer>
-  <a class="edition" href="/edit/{{identifier}}" title="Edit: {{data.get('TITLE', '')}}"><span class="fa-stack fa-lg"><i class="fa fa-pencil-square-o fa-stack-1x"></i></span></a>
+  <a class="edition" href="/edit/{{ identifier }}" title="Edit: {{ name }}"><i class="fa fa-pencil-square-o fa-fw"></i></a>
 </article>
-% include('footer.tpl')

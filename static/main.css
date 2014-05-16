@@ -1,3 +1,18 @@
+/*
+   Theme: Hymby's default
+   Author:
+   Author URI:
+   Description:
+   Version:
+   License:
+   License URI:
+   Tags:
+*/
+
+/* =========================================================================
+   MAIN
+   ========================================================================= */
+
 html, body {
   margin: 0;
   padding: 0;
@@ -6,6 +21,27 @@ html, body {
   background-color: #add8e6;
   font-family: Georgia, Palatino, serif;
 }
+
+a {
+  color: #0099ff;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+
+a:visited {
+  color: purple;
+}
+
+a:hover {
+  text-decoration: none;
+  color: #0000ff;
+}
+
+/* =========================================================================
+   NAVIGATION / MENU
+   ========================================================================= */
+
 aside#navigation {
   position: absolute;
   display: block;
@@ -18,25 +54,25 @@ aside#navigation {
   z-index: 1;
 }
 aside#navigation ol {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 aside#navigation ol li {
-    height: 30px;
-    width: 20px;
-    float: left;
+  height: 30px;
+  width: 20px;
+  float: left;
 }
 aside#navigation ol li a {
-    display: block;
-    margin: 0;
-    padding: 0;
-    height: 30px;
-    width: 20px;
+  display: block;
+  margin: 0;
+  padding: 0;
+  height: 30px;
+  width: 20px;
 }
 aside#navigation ol li a i {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 aside#navigation ol li a i.fa-info-circle {
 }
@@ -45,30 +81,23 @@ aside#navigation ol li a i.fa-home {
 aside#navigation ol li a i.fa-cog {
 }
 aside#navigation ol li a {
-    display: block;
-    color: #000000;
-}
-aside#navigation ol li a:hover {
-    color: #000000;
+  display: block;
+  color: #000000;
 }
 aside#navigation ol li a:visited {
-    color: #000000;
+  color: #000000;
 }
-a {
-    color: #0099ff;
-    margin: 0;
-    padding: 0;
-    vertical-align: baseline;
+aside#navigation ol li a:hover {
+  color: #0000ff;
 }
-a:hover {
-    text-decoration: none;
-    color: #0000ff;
-}
-a:visited {
-    color: purple;
-}
+
+/* =========================================================================
+   MAIN HEADER
+   ========================================================================= */
+
+
 header#main {
-    margin-bottom: 30px;
+  margin-bottom: 30px;
 }
 header {
   position: relative;
@@ -80,23 +109,160 @@ header h1 {
   font-size: 28px;
 }
 header h1 input {
-    width: 50%;
+  width: 50%;
 }
 header a {
-    text-decoration: none;
-    color: #000000;
+  text-decoration: none;
+  color: #000000;
 }
 header a:visited {
-    color: #000000;
+  color: #000000;
 }
 header.main {
-    z-index: 0;
+  z-index: 0;
 }
 header p#subtitle {
   text-align: left;
   margin: 0 0 0 15px;
   padding: 0;
 }
+
+/* =========================================================================
+   CONTENT
+   ========================================================================= */
+
+/* Main content */
+#content {
+  width: 90%;
+  margin: 0 auto;
+  padding: 0 0.5%;
+  min-height: 300px;
+}
+
+/* Notes */
+article#error {
+  padding: 0;
+  margin: 0;
+}
+section#warning {
+  padding: 5px;
+  background-color: #fcfce9;
+  color: #494949;
+  border-bottom: thin solid #000000;
+}
+section#error {
+  padding: 5px;
+  background-color: #ffdfdf;
+  color: #494949;
+  border-bottom: thin solid #000000;
+}
+article {
+  margin: 0 0 2% 0;
+  padding: 0 0 0 0;
+  min-height: 150px;
+  background-color: #eeeeee;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+  -moz-box-shadow: 1px 1px 13px #000;
+  -webkit-box-shadow: 1px 1px 13px #000;
+  box-shadow: 1px 1px 13px #000;
+}
+article:last-child {
+  margin-bottom: 0;
+}
+article h1 {
+  height: 99%;
+  margin: 0;
+  padding: 0 0 0 1%;
+  font-size: 23px;
+  line-height: 50px;
+  border-bottom: thin solid #999999;
+}
+article h1 input#name {
+  background-color: #eeeeee;
+  border: none;
+  text-align: center;
+  width: 100%;
+  padding: 0;
+}
+article h1 a {
+  text-decoration: none;
+  color: #0099ff;
+}
+article h1 a:visited {
+  color: #0099ff;
+}
+article h1 a:hover {
+  color: blue;
+}
+article#edit post, input#name {
+  font-weight: bold;
+  font-size: 18px;
+}
+article ol.actions {
+  width: auto;
+  float: right;
+  list-style-type: none;
+  margin: 3px 3px 0 0;
+  padding: 0;
+  width: auto;
+  height: 20px;
+}
+article ol.actions li {
+  float: right;
+}
+
+article ol.actions li a:hover {
+  color: #0000ff;
+}
+
+article ol.actions a.delete {
+}
+
+article ol.actions a.edition-title {
+}
+
+article a.edition {
+  display: block;
+  text-align: left;
+  color: #000000;
+  padding: 0;
+  margin: 0 0 0 5px;
+}
+article a.edition:hover {
+  color: #0000ff;
+}
+
+article section.excerpt {
+  margin: 0 auto;
+  width: 98%;
+}
+
+article section#metadata {
+  display: none;
+}
+
+article section#content {
+  padding: 0;
+  width: 100%;
+}
+
+article section#content textarea {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+article footer {
+  clear: both;
+  margin: 10px 0;
+}
+
+/* =========================================================================
+   MAIN FOOTER
+   ========================================================================= */
+
 footer {
   width: 85%;
   margin: 0 auto;
@@ -107,125 +273,38 @@ footer hr {
   margin-top: 2%;
   width: 50%;
 }
-#content {
-  width: 90%;
-  margin: 0 auto;
-  padding: 0.5%;
-  min-height: 300px;
-}
-article#error {
-    padding: 0;
-    margin: 0;
-}
-section#warning {
-    padding: 5px;
-    background-color: #fcfce9;
-    color: #494949;
-    border-bottom: thin solid #000000;
-}
-section#error {
-    padding: 5px;
-    background-color: #ffdfdf;
-    color: #494949;
-    border-bottom: thin solid #000000;
-}
-article {
-   margin: 0 0 2% 0;
-   padding: 0;
-    min-height: 150px;
-   background-color: #eeeeee;
-   -moz-border-radius: 7px;
-   border-radius: 7px;
-   -moz-box-shadow: 1px 1px 13px #000;
-   -webkit-box-shadow: 1px 1px 13px #000;
-   box-shadow: 1px 1px 13px #000;
-}
-article h1 {
-    margin: 0;
-    font-size: 23px;
-    line-height: 50px;
-    border-bottom: thin solid #999999;
-}
-article h1 input#name {
-    background-color: #eeeeee;
-    border: none;
-    text-align: center;
-    width: 100%;
-    padding: 0;
-}
-article h1 a {
-   text-decoration: none;
-   color: #0099ff;
-}
-article h1 a:visited {
-    color: #0099ff;
-}
-article h1 a:hover {
-    color: blue;
-}
-article a.delete {
-    width: auto;
-    display: block;
-    right: 0;  
-    color: #000000;
-    float: right;
-}
-article#edit post, input#name {
-    font-weight: bold;
-    font-size: 18px;
-}
-article a.edition-title {
-    display: block;
-    float: left;
-    color: #000000;
-}
-article section.excerpt {
-    margin: 0 auto;
-    width: 98%;
-}
-article section#metadata {
-    display: none;
-}
-article section#content {
-    padding: 0;
-    width: 100%;
-}
-article section#content textarea {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    border: 0;
-}
-article footer {
-    clear: both;
-    margin: 10px;
-}
-article a.edition {
-    display: block;
-    text-align: left;
-    color: #000000;
-    padding: 0;
-}
+
+/* =========================================================================
+   FORMS
+   ========================================================================= */
+
 input#save {
-    text-align: auto;
-    width: 100%;
-    text-transform: uppercase;
-    font-weight: bold;
-    border: none;
-    border-top: thin solid #000000;
-    background-color: #ffffff;
+  text-align: auto;
+  width: 100%;
+  text-transform: uppercase;
+  font-weight: bold;
+  border: none;
+  border-top: thin solid #000000;
+  background-color: #ffffff;
 }
+
+/* =========================================================================
+   SPECIFIC
+   ========================================================================= */
+
+/* New note */
 a#new {
-    display: block;
-    text-align: center;
-    text-decoration: none;
-    font-style: italic;
-    color: #0099ff;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  font-style: italic;
+  color: #0099ff;
+  margin-bottom: 2%;
 }
 a#new:visited {
-    color: #0099ff;
+  color: #0099ff;
 }
 a#new article {
-    padding: 1% 0;
-    min-height: 0;
+  padding: 1% 0;
+  min-height: 0;
 }

@@ -6,11 +6,16 @@ Not found.
 
 ## General
 
+  * Change vocabulary:
+    * Post are NOTE
+    * main menu is NAVIGATION
+    * edition/deletion buttons are ACTIONS
   * Make a tests directory
   * Learn how to test a bottlepy app
 
 ## Code
 
+  * Refactoring of EDIT/NEW POST to make a common template for edition
   * Complete installation steps
   * Make all methods from makefly.py (or other) to return 2 values:
     * the result : True/False
