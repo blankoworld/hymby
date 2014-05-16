@@ -11,4 +11,4 @@
 <input type="submit" name="save" value="save">
 </form>
 %end
-% include('footer.tpl')
+% include('footer.tpl', engine=False)

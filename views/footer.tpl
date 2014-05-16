@@ -1,8 +1,10 @@
   </div>
 
-  <footer id="footer">
+  <footer id="main">
+%if engine:
     <hr />
-    <p>Powered by <a href="#" title="Hymby">Hymby</a> 
+    <p id="engine">Powered by <a href="#" title="Hymby">Hymby</a> 
+%end
   </footer>
 
 <script type="text/javascript" src="/static/js/jquery.js"></script>

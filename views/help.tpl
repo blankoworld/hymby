@@ -9,4 +9,4 @@
     <p>&nbsp;</p>
   </footer>
 </article>
-% include('footer.tpl')
+% include('footer.tpl', engine=True)

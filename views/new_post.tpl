@@ -18,4 +18,4 @@
     <input type="submit" name="save" value="Save" id="save">
   </article>
 </form>
-% include('footer.tpl')
+% include('footer.tpl', engine=False)

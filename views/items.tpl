@@ -9,4 +9,4 @@
 % for item in items:
 % include('item.tpl', identifier=item[0], name=item[1], description=item[2], content=item[3])
 % end
-% include('footer.tpl')
+% include('footer.tpl', engine=False)
