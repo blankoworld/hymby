@@ -2,7 +2,7 @@
 <form action="/items/new" method="POST">
   <article id="new post">
     <header>
-      <h1><input type="text" name="name" id="name"></h1>
+      <h1><input type="text" name="name" id="name" placeholder="The Note Title"></h1>
     </header>
     <section id="metadata">
         <label for='description'>Description:</label><input type="text" maxlength="256" name="description" id="description"><br />
