@@ -145,16 +145,18 @@ article#error {
   margin: 0;
 }
 section#warning {
+  width: 98%;
   padding: 5px;
+  margin: 1% auto 0 auto;
   background-color: #fcfce9;
   color: #494949;
-  border-bottom: thin solid #000000;
 }
 section#error {
+  width: 98%;
   padding: 5px;
+  margin: 1% auto 0 auto;
   background-color: #ffdfdf;
   color: #494949;
-  border-bottom: thin solid #000000;
 }
 article {
   margin: 0 0 2% 0;
