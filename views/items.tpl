@@ -2,7 +2,7 @@
 <a id="new" href="/items/new" title="Create a new post">
   <article>
     <header>
-      <p>Create a new post</p>
+      <p>What's new today?</p>
     </header>
   </article>
 </a>

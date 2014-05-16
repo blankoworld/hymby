@@ -3,7 +3,7 @@ html, body {
   padding: 0;
   height: 100%;
   width: 100%;
-  background-color: #cccccc;
+  background-color: #add8e6;
   font-family: Georgia, Palatino, serif;
 }
 aside#navigation {
@@ -72,8 +72,8 @@ header {
   clear: both;
 }
 header h1 {
-  text-align: center;
-  margin: 0;
+  text-align: left;
+  margin: 15px 0 0 15px;
   font-size: 28px;
 }
 header h1 input {
@@ -81,6 +81,7 @@ header h1 input {
 }
 header a {
     text-decoration: none;
+    color: #000000;
 }
 header a:visited {
     color: #000000;
@@ -89,8 +90,8 @@ header.main {
     z-index: 0;
 }
 header p#subtitle {
-  text-align: center;
-  margin: 0;
+  text-align: left;
+  margin: 0 0 0 15px;
   padding: 0;
 }
 footer {
@@ -150,7 +151,13 @@ article h1 input#name {
 }
 article h1 a {
    text-decoration: none;
-   color: #000;
+   color: #0099ff;
+}
+article h1 a:visited {
+    color: #0099ff;
+}
+article h1 a:hover {
+    color: blue;
 }
 article a.delete {
     width: auto;
@@ -207,10 +214,12 @@ input#save {
 a#new {
     display: block;
     text-align: center;
-    text-transform: uppercase;
     text-decoration: none;
-    font-weight: bold;
-    color: #000000;
+    font-style: italic;
+    color: #0099ff;
+}
+a#new:visited {
+    color: #0099ff;
 }
 a#new article {
     padding: 1% 0;
