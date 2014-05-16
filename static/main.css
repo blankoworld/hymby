@@ -67,6 +67,9 @@ a:hover {
 a:visited {
     color: purple;
 }
+header#main {
+    margin-bottom: 30px;
+}
 header {
   position: relative;
   clear: both;

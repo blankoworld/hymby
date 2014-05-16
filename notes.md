@@ -1,12 +1,12 @@
 # Général
 
 * Changer couleur (palette)
-* Titre header h1 complètement à gauche
-* Icônes à droite
-* Icônes plus petite (x1) (un quart de leur taille actuelle)
-* Create new post: italique mais pas gras
-* Trouver une phrase à la place de "create a new post"
-* Plus d'espace entre le premier titre et le "create a new post"
+FAIT | * Titre header h1 complètement à gauche
+FAIT | * Icônes à droite
+FAIT | * Icônes plus petite (x1) (un quart de leur taille actuelle)
+FAIT | * Create new post: italique mais pas gras
+FAIT | * Trouver une phrase à la place de "create a new post"
+FAIT | * Plus d'espace entre le premier titre et le "create a new post"
 * Donner possibilité de choisir un thème pour Hymby
 
 # Articles
