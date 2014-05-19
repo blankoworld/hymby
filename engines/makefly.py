@@ -123,6 +123,15 @@ def refresh(self, errorfile):
         return False, 'Blog generation failed!'
     return True
 
+def get_config(self):
+    """
+    Read the configuration
+    """
+    res = {}
+    configfile = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.configfile', '')])
+    # TODO: read given configuration file
+    return {}
+
 def get_items(self):
     '''
     Return the list of items from Makefly as a tuple list.

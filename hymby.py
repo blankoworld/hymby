@@ -269,6 +269,15 @@ def help(language='en'):
             content = 'python-markdown module missing!'
     return template('help.tpl', title='Help', content=content)
 
+@hymby.route('/config')
+def config_page():
+    """
+    Display current configuration and permit to change values.
+    """
+    check_config()
+    # TODO: Make an if/else to permit to change configuration
+    return template('config.tpl', title='Configuration', config=hymby.params, engine_config=hymby.engine.get_config(hymby))
+
 # STATIC routes
 @hymby.route('/static/<filename:path>')
 def send_static(filename):
