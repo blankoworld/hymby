@@ -1,0 +1,7 @@
+[makefly]
+configfile = makefly.rc
+db_extension = .mk
+src_extension = .md
+db_directory = db
+src_directory = src
+static_directory = static

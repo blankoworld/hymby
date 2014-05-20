@@ -128,9 +128,16 @@ def get_config(self):
     Read the configuration
     """
     res = {}
-    configfile = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.configfile', '')])
-    # TODO: read given configuration file
-    return {}
+    config = ''
+    configpath = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.configfile', '')])
+    with open(configpath, 'r') as f:
+        config = f.read()
+        f.close()
+    for line in config.split('\n'):
+        if line:
+            field, content = line.split('=')
+            res[field.strip()] = content.strip()
+    return res
 
 def get_items(self):
     '''

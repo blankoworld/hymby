@@ -9,6 +9,7 @@ Copyright (c) 2014, Olivier DOSSMANN
 License: MIT (see LICENSE for details)
 """
 
+import bottle
 from bottle import Bottle
 from bottle import route
 from bottle import run
@@ -20,7 +21,6 @@ from bottle import ConfigDict
 from bottle import default_app
 from os import listdir
 from os import path
-from ConfigParser import SafeConfigParser as ConfigParser
 from threading import Thread
 
 hymby = application = Bottle()
@@ -33,18 +33,12 @@ general_config = {
 }
 hymby.params.update(general_config)
 
-# Makefly default configuration
-makefly_config = {
-    'makefly.db_extension': '.mk',
-    'makefly.src_extension': '.md',
-    'makefly.db_directory': 'db',
-    'makefly.src_directory': 'src',
-    'makefly.static_directory': 'static',
-}
-hymby.params.update(makefly_config)
-
 # Useful info
 hymby.DBFILES = [] # contains list of files that contains the metadata of each post
+
+# Miscellaneous
+module_pyfile = 'main'
+module_configfile = 'configrc'
 
 def check_config():
     '''
@@ -64,12 +58,11 @@ def check_config():
     # Read configuration file
     conf = ConfigDict().load_config(hymby.params['filename'])
     hymby.params.update(conf)
-    hymby.params.update({'checked': True}) # Configuration checked
 
     # TODO: Check if engine module exists regarding the configuration file ('engine' variable)
     # If not, launch /install procedure
-    conf_engine = hymby.params.get('general.engine', False)
-    if not conf_engine:
+    engine = hymby.params.get('general.engine', False)
+    if not engine:
         redirect('/install')
 
     # Check if blog exists regarding the configuration file ('path' variable)
@@ -77,9 +70,17 @@ def check_config():
     if not path.exists(hymby.params.get('general.path', False)):
         # TODO: Add a param to inform why we launch installation
         redirect('/install')
-    # Load given engine special features
-    loaded_engine = __import__('engines.' + conf_engine)
-    hymby.engine = getattr(loaded_engine, conf_engine)
+    # Load given engine special features (main.py file in given engine)
+    module = __import__('engines.' + engine)
+    loaded_engine = getattr(module, engine)
+    hymby.engine = getattr(loaded_engine, module_pyfile)
+    # Load given engine specific configuration (configrc file in given engine)
+    engine_config_filepath = '/'.join(['engines', engine, module_configfile])
+    engine_config = ConfigDict().load_config(engine_config_filepath)
+    hymby.params.update(engine_config)
+    hymby.params.update({'checked': True}) # Configuration checked
+    # Add new specific views from given engine to Hymby
+    bottle.TEMPLATE_PATH.append('/'.join(['engines', engine, 'views']))
     return True
 
 def install(message='', message_type='normal'):
@@ -275,7 +276,7 @@ def config_page():
     Display current configuration and permit to change values.
     """
     check_config()
-    # TODO: Make an if/else to permit to change configuration
+    # TODO: Make an if/else to permit to write changes
     return template('config.tpl', title='Configuration', config=hymby.params, engine_config=hymby.engine.get_config(hymby))
 
 # STATIC routes
@@ -289,7 +290,9 @@ def send_static_markitup(filename):
 
 @hymby.route('/engine/<filename:path>')
 def send_static_engine(filename):
-    static_path = '/'.join([hymby.params.get('general.path', ''), hymby.params.get('makefly.static_directory', '')])
+    check_config()
+    engine = hymby.params.get('general.engine')
+    static_path = '/'.join([hymby.params.get('general.path', ''), hymby.params.get(engine + 'static_directory', '')])
     return static_file(filename, root=static_path)
 
 # ERRORS

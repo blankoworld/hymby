@@ -295,6 +295,13 @@ footer#main p a:hover {
    FORMS
    ========================================================================= */
 
+label
+{
+	display: block;
+	width: 300px;
+	float: left;
+}
+
 input#save {
   text-align: auto;
   width: 100%;

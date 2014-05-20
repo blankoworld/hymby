@@ -10,5 +10,5 @@
     </form>
   </section>
 </article>
-% include('engines/%s.tpl' % (config.get('general.engine', '')), config=engine_config)
+% include('config.%s.tpl' % (config.get('general.engine', '')), config=engine_config)
 % include('footer.tpl', engine=False)
