@@ -139,6 +139,18 @@ def get_config(self):
             res[field.strip()] = content.strip()
     return res
 
+def get_title(self):
+    """
+    Fetch blog title
+    """
+    return get_config(self).get('BLOG_TITLE', 'No blog title')
+
+def get_description(self):
+    """
+    Fetch blog description
+    """
+    return get_config(self).get('BLOG_SHORT_DESC', '')
+
 def get_items(self):
     '''
     Return the list of items from Makefly as a tuple list.

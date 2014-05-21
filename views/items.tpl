@@ -1,4 +1,4 @@
-% include('header.tpl', title='Notes')
+% include('header.tpl', title='Notes', blog_title=blog_title, blog_desc=blog_desc)
 <a id="new" href="/items/new" title="Publish a new note">
   <article>
     <header>

@@ -32,7 +32,6 @@ general_config = {
     'refresh_errors': 'refresh_errors.log',
 }
 hymby.params.update(general_config)
-
 # Useful info
 hymby.DBFILES = [] # contains list of files that contains the metadata of each post
 
@@ -125,7 +124,7 @@ def items():
     '''
     check_config()
     item_list = hymby.engine.get_items(hymby) or []
-    return template('items', items=item_list)
+    return template('items', items=item_list, blog_title=hymby.engine.get_title(hymby), blog_desc=hymby.engine.get_description(hymby))
 
 def new_item():
     '''

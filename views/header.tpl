@@ -21,8 +21,8 @@
   </aside>
 
   <header id="main">
-    <h1><a href="/">Host Your Mini Blog Yourself</a></h1>
-    <p id="subtitle">A static weblog engine management system</p>
+    <h1><a href="/">{{ blog_title }}</a></h1>
+    <p id="subtitle">{{ blog_desc }}</p>
   </header>
 
   <div id="content">
