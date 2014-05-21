@@ -43,23 +43,23 @@ a:hover {
    ========================================================================= */
 
 aside#navigation {
-  position: absolute;
   display: block;
   top: 0;
   right: 0;
-  height: 30px;
-  width: 60px;
+  height: 20px;
+  width: 100%;
   margin: 0;
   padding: 0;
-  z-index: 1;
+  background-color: #6891cf;
 }
 aside#navigation ol {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  float: right;
 }
 aside#navigation ol li {
-  height: 30px;
+  height: 20px;
   width: 20px;
   float: left;
 }
@@ -67,7 +67,7 @@ aside#navigation ol li a {
   display: block;
   margin: 0;
   padding: 0;
-  height: 30px;
+  height: 20px;
   width: 20px;
 }
 aside#navigation ol li a i {
@@ -82,13 +82,14 @@ aside#navigation ol li a i.fa-cog {
 }
 aside#navigation ol li a {
   display: block;
-  color: #000000;
+  color: #ffffff;
 }
 aside#navigation ol li a:visited {
-  color: #000000;
+  color: #ffffff;
 }
 aside#navigation ol li a:hover {
-  color: #0000ff;
+  background-color: #eeeeee;
+  color: #000000;
 }
 
 /* =========================================================================
@@ -98,6 +99,7 @@ aside#navigation ol li a:hover {
 
 header#main {
   margin-bottom: 30px;
+  color: #ffffff;
 }
 header {
   position: relative;
@@ -113,10 +115,10 @@ header h1 input {
 }
 header a {
   text-decoration: none;
-  color: #000000;
+  color: #ffffff;
 }
 header a:visited {
-  color: #000000;
+  color: #ffffff;
 }
 header.main {
   z-index: 0;
@@ -159,15 +161,15 @@ section#error {
   color: #494949;
 }
 article {
-  margin: 0 0 2% 0;
+  margin: 0 0 1.7% 0;
   padding: 0 0 0 0;
   min-height: 150px;
   background-color: #eeeeee;
   -moz-border-radius: 7px;
   border-radius: 7px;
-  -moz-box-shadow: 1px 1px 13px #000;
-  -webkit-box-shadow: 1px 1px 13px #000;
-  box-shadow: 1px 1px 13px #000;
+  -moz-box-shadow: 1px 1px 5px #000;
+  -webkit-box-shadow: 1px 1px 5px #000;
+  box-shadow: 1px 1px 5px #000;
 }
 article:last-child {
   margin-bottom: 0;
@@ -219,9 +221,11 @@ article ol.actions li a:hover {
 }
 
 article ol.actions a.delete {
+  color: #000000;
 }
 
 article ol.actions a.edition-title {
+  color: #000000;
 }
 
 article a.edition {
@@ -324,7 +328,7 @@ a#new {
   text-decoration: none;
   font-style: italic;
   color: #0099ff;
-  margin-bottom: 2%;
+  margin-bottom: 1.7%;
 }
 a#new:visited {
   color: #0099ff;
