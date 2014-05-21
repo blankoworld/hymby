@@ -265,7 +265,7 @@ def help(language='en'):
     if content:
         try:
             mdwn = __import__('markdown')
-            content = mdwn.markdown(content.decode('utf-8'))
+            content = mdwn.markdown(content.decode('utf-8'), extensions=['toc'])
         except ImportError as e:
             content = 'python-markdown module missing!'
     return template('help.tpl', title='Help', content=content)

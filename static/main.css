@@ -244,6 +244,12 @@ article section.excerpt {
   width: 98%;
 }
 
+article section.doc {
+  margin: 0 auto;
+  padding: 5px 0;
+  width: 98%;
+}
+
 article section#metadata {
   display: none;
 }

@@ -2,7 +2,7 @@
 <article>
   <header>
   </header>
-  <section class="excerpt">
+  <section class="doc">
     {{!content}}
   </section>
   <footer>
