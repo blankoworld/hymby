@@ -9,6 +9,7 @@ Copyright (c) 2014, Olivier DOSSMANN
 License: MIT (see LICENSE for details)
 """
 
+# Imports
 import bottle
 from bottle import Bottle
 from bottle import route
@@ -22,19 +23,20 @@ from os import listdir
 from os import path
 from threading import Thread
 
+# Create Hymby's application
 hymby = application = Bottle()
+
+# Main params (general configuration)
 hymby.params = {}
-# General configuration
 general_config = {
     'filename': 'hymbyrc',
     'checked': False,
     'refresh_errors': 'refresh_errors.log',
 }
 hymby.params.update(general_config)
-# Useful info
-hymby.DBFILES = [] # contains list of files that contains the metadata of each post
 
 # Miscellaneous
+hymby.DBFILES = [] # contains list of files that contains the metadata of each post
 module_pyfile = 'main'
 module_configfile = 'configrc'
 
@@ -46,10 +48,14 @@ def hymby_template(*args, **kwargs):
 
 template = hymby_template
 
+#####
+## METHODS
+###
+
 def check_config():
     '''
-    Check that configuration file exist regarding hymby.params['filename'] variable.
-    If not: go to the installation page to create the file.
+    Load all configuration parameters and initialize some other variables.
+    If not configuration file found: make installation
     '''
     # if configuration file exists and hymby.params filled in, nothing to do
     if path.exists(hymby.params['filename']) and hymby.params.get('checked', False) and path.exists(hymby.params.get('general.path', False)):
@@ -90,12 +96,12 @@ def check_config():
     return True
 
 def install(message='', message_type='normal'):
-    '''
-    Launch the installation procedure:
-      - fetch some info
-      - create the configuration file
-      - fetch the given static weblog engine
-    '''
+    """
+    Installation procedure:
+      * Get user choice
+      * Create the configuration file
+      * Install the static weblog engine and configure it
+    """
     installed = False
     if request.forms.get('save', '').strip():
         # TODO: check that engine + path have been filled in
@@ -112,33 +118,28 @@ def install(message='', message_type='normal'):
             installed = True
         return template('install', installed=installed, message=message, message_type=message_type)
 
-def get_items():
-    return error404('No engine found', 'error')
-
 @hymby.route('/')
 def homepage():
-    '''
-    Check configuration file then redirect to the items list
-    '''
+    """
+    Display homepage.
+    Per default: list of posts
+    """
     check_config()
-    # If all is OK, redirect user to the list of items
     redirect('/items')
 
 @hymby.route('/items')
 def items():
-    '''
-    List of items
-    '''
+    """
+    List of items of the entire weblog
+    """
     check_config()
     item_list = hymby.engine.get_items(hymby) or []
     return template('items', items=item_list)
 
 def new_item():
-    '''
-    New item creation page.
-    If no data, get form view.
-    If data given, add the new item.
-    '''
+    """
+    Create a new post
+    """
     check_config()
     data = {}
     if request.POST.get('save', '').strip():
@@ -173,10 +174,9 @@ def new_item():
       return template('new_post', name='New post', title='Add a new post')
 
 def edit_item(name=False):
-    '''
-    Edit an item content.
-    If not item, return to the item list.
-    '''
+    """
+    Permit to display a specific post and modify it
+    """
     check_config()
     if not name:
         redirect('/items')
@@ -218,9 +218,9 @@ def edit_item(name=False):
 
 @hymby.route('/item/<name>')
 def item(name):
-    '''
-    Display content of given post (name)
-    '''
+    """
+    Post content (regarding its identifier: <name>)
+    """
     check_config()
     # search the post
     details = hymby.engine.get_item_metadata(hymby, name)
@@ -228,10 +228,11 @@ def item(name):
     if not details:
         redirect('/items')
     return template('single', identifier=name, content=hymby.engine.get_item_content(hymby, name, replacements=True), data=details, title=details.get('TITLE', ''))
+
 @hymby.route('/delete/<name>')
 def delete_item(name):
     """
-    Delete given item (name).
+    Delete a post (regarding its identifier: <name>)
     """
     check_config()
     # search the post
@@ -252,13 +253,17 @@ def delete_item(name):
 
 @hymby.route('/help')
 def go_to_help():
+    """
+    Display help
+    By default in English (en)
+    """
+    # TODO: Check user language
     redirect('/help/en')
 
 @hymby.route('/help/<language>')
 def help(language='en'):
     """
-    Display given help page.
-    If language not found, return 404 page.
+    Display help in the given <language>
     """
     content = ''
     helppath = './doc/README.%s.md' % (language)
@@ -279,43 +284,64 @@ def help(language='en'):
 @hymby.route('/config')
 def config_page():
     """
-    Display current configuration and permit to change values.
+    Display general configuration.
+    Display specific static weblog engine configuration.
+    Allow to change values.
     """
     check_config()
     # TODO: Make an if/else to permit to write changes
     return template('config', title='Configuration', config=hymby.params, engine_config=hymby.engine.get_config(hymby))
 
-# STATIC routes
+#####
+## STATIC routes
+###
 @hymby.route('/static/<filename:path>')
 def send_static(filename):
+    """
+    Main static directory.
+    """
     return static_file(filename, root='./static/')
 
 @hymby.route('/fonts/<filename:path>')
 def send_static_markitup(filename):
+    """
+    Static fonts directory for "Font Awesome"
+    """
     return static_file(filename, root='./static/fonts/')
 
 @hymby.route('/engine/<filename:path>')
 def send_static_engine(filename):
+    """
+    Static directory from the static weblog engine
+    """
     check_config()
     engine = hymby.params.get('general.engine')
     static_path = '/'.join([hymby.params.get('general.path', ''), hymby.params.get(engine + 'static_directory', '')])
     return static_file(filename, root=static_path)
 
-# ERRORS
+#####
+## ERRORS pages
+###
 @hymby.error(404)
 def error404(error='', error_type='none'):
-    '''
-    Default 404 page.
-    '''
+    """
+    404 error page
+    """
     return template('404', message=error, message_type=error_type)
 
-# SPECIAL routes
+#####
+## SPECIAL routes
+###
 hymby.route('/install', ['GET', 'POST'], install)
 hymby.route('/items/new', ['GET', 'POST'], new_item)
 hymby.route('/edit/<name>', ['GET', 'POST'], edit_item)
 
-# Run application
-#+ DEBUG   : should be set to False in production
-#+ RELOADER: idem
+#####
+## MAIN
+###
+
+# DEBUG   : should be set to False in production
+# RELOADER: idem
+
 if __name__ == '__main__':
     hymby.run(host='0.0.0.0', port=8080, debug=True, reloader=True)

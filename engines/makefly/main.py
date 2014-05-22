@@ -22,9 +22,10 @@ MAKEFLY_DBFILE_REGEX = recompile('(?P<timestamp>\d+),(?P<basename>.*)(?P<extensi
 MAKEFLY_POST_LIMIT = 15
 
 def makefly_metafiles(self, pathname, extension):
-    '''
-    Return list of meta files from the 'db' directory (by default Makefly configure it to be 'db')
-    '''
+    """
+    Return a list of files that contains the metadata of posts.
+    In Makefly: 'db' directory is the default directory that contains them
+    """
     files = []
     for listed_file in listdir(pathname):
         if listed_file.endswith(extension):
@@ -34,12 +35,14 @@ def makefly_metafiles(self, pathname, extension):
     return files
 
 def makefly_metadata(self, filepath):
-    '''
-    Read meta data from given filepath.
-    The format is:
+    """
+    Get data from given filepaths
+    Default Makefly's format is:
+
         variable = content
-    Also delete whitespace at beginning and end of variable and content.
-    '''
+
+    This method delete whitespace at beginning and end of variable and content.
+    """
     variables = {}
     if path.exists(filepath):
         with open(filepath, 'r') as f:
@@ -58,7 +61,7 @@ def makefly_metadata(self, filepath):
 
 def makefly_content(self, identifier, limit=False):
     """
-    Read the content of given item.
+    Get content of given <identifier>
     Return a string
     """
     # Fetch post content
@@ -78,7 +81,8 @@ def makefly_content(self, identifier, limit=False):
 
 def do_replacements(self, string):
     """
-    Make some replacements in given string.
+    Do replacements in <string>:
+      * Change "${BLOG_URL}" to /engine: this is to display pictures
     """
     # Change value of BLOG_URL by another value
     return string.replace("${BLOG_URL}", '/engine')
@@ -125,7 +129,7 @@ def refresh(self, errorfile):
 
 def get_config(self):
     """
-    Read the configuration
+    Get Makefly's configuration.
     """
     res = {}
     config = ''
@@ -141,24 +145,24 @@ def get_config(self):
 
 def get_title(self):
     """
-    Fetch blog title
+    Fetch blog title.
     """
     return get_config(self).get('BLOG_TITLE', 'No blog title')
 
 def get_description(self):
     """
-    Fetch blog description
+    Fetch blog description.
     """
     return get_config(self).get('BLOG_SHORT_DESC', '')
 
 def get_items(self):
-    '''
+    """
     Return the list of items from Makefly as a tuple list.
     Each tuple contains:
       - unique id used by get_item method to display the content of a given post
       - title of the post
       - description of the post
-    '''
+    """
     # Prepare some values
     result = []
     files = self.DBFILES
@@ -187,8 +191,8 @@ def get_items(self):
 
 def item_exists(self, identifier):
     """
-    Check if the item exists in DB directory.
-    Return a boolean
+    Check if the item exists. For Makefly: check that <identifier> exists in 'db' directory.
+    Return a boolean.
     """
     # Some checks
     if not identifier:
@@ -200,7 +204,7 @@ def item_exists(self, identifier):
 
 def get_item_metadata(self, identifier):
     """
-    Return meta
+    Return metadata of the given post (<identifier>).
     """
     # Some checks
     if not identifier:
@@ -214,10 +218,10 @@ def get_item_metadata(self, identifier):
 
 def get_item_content(self, identifier, transformed=True, replacements=False):
     """
-    Get the content of the given identifier.
+    Get the content of the given post (<identifier>).
     If transformed is False, then just give the content of the article.
-    If transformed is True, transform the content into HTML.
-    Do some replacements using do_replacement method if asked.
+    If transformed is True, transform the content into HTML by using Markdown.
+    replacements means that we apply some replacements in the content.
     """
     # Some checks
     if not identifier:
@@ -236,7 +240,7 @@ def get_item_content(self, identifier, transformed=True, replacements=False):
 
 def new_item(self, data, content):
     """
-    Create a new item with info in data and post's content in content variable
+    Create a new item using given info.
     """
     # Some checks
     if not data:
@@ -282,7 +286,7 @@ def new_item(self, data, content):
 
 def edit_item(self, identifier, data=False):
     """
-    Edit metadata and content of a given item
+    Modify given post (<identifier>).
     """
     res = False
     msg = ''
@@ -327,7 +331,7 @@ def edit_item(self, identifier, data=False):
 
 def delete_item(self, identifier):
     """
-    Delete given post regarding its identifier
+    Delete given post (regarding its <identifier>).
     """
     # Prepare some values
     res = False
