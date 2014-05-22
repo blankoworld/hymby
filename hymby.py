@@ -13,7 +13,6 @@ import bottle
 from bottle import Bottle
 from bottle import route
 from bottle import run
-from bottle import template
 from bottle import redirect
 from bottle import request
 from bottle import static_file
@@ -38,6 +37,14 @@ hymby.DBFILES = [] # contains list of files that contains the metadata of each p
 # Miscellaneous
 module_pyfile = 'main'
 module_configfile = 'configrc'
+
+# Bottle Customization
+def hymby_template(*args, **kwargs):
+    blog_title = hymby.engine.get_title(hymby)
+    blog_desc = hymby.engine.get_description(hymby)
+    return bottle.template(blog_desc=blog_desc, blog_title=blog_title, *args, **kwargs)
+
+template = hymby_template
 
 def check_config():
     '''
@@ -96,14 +103,14 @@ def install(message='', message_type='normal'):
         # TODO: perform installation regarding given info
         pathname = request.forms.getunicode('path', '').encode('utf-8').strip()
         if not pathname:
-            return template('install.tpl', message='Path missing', message_type='warning', installed=False)
+            return template('install', message='Path missing', message_type='warning', installed=False)
         return "<p>Installation succeeded.</p>"
     else:
         config_exists = path.exists(hymby.params.get('filename', '')) or False
         config_checked = hymby.params.get('checked', False)
         if config_exists and config_checked:
             installed = True
-        return template('install.tpl', installed=installed, message=message, message_type=message_type)
+        return template('install', installed=installed, message=message, message_type=message_type)
 
 def get_items():
     return error404('No engine found', 'error')
@@ -124,7 +131,7 @@ def items():
     '''
     check_config()
     item_list = hymby.engine.get_items(hymby) or []
-    return template('items', items=item_list, blog_title=hymby.engine.get_title(hymby), blog_desc=hymby.engine.get_description(hymby))
+    return template('items', items=item_list)
 
 def new_item():
     '''
@@ -157,13 +164,13 @@ def new_item():
         })
         pid, msg = hymby.engine.new_item(hymby, data, pcontent)
         if not pid:
-            return template('errors.tpl', title='Warning', message_type='warning', message=msg)
+            return template('errors', title='Warning', message_type='warning', message=msg)
         # If all is OK, refresh blog
         t = Thread(group=None, target=hymby.engine.refresh, name=None, args=(hymby, hymby.params.get('refresh_errors')))
         t.start()
         redirect('/item/%s' % pid)
     else:
-      return template('new_post.tpl', name='New post', title='Add a new post')
+      return template('new_post', name='New post', title='Add a new post')
 
 def edit_item(name=False):
     '''
@@ -198,7 +205,7 @@ def edit_item(name=False):
         })
         res, msg = hymby.engine.edit_item(hymby, name, data)
         if not res:
-            return template('errors.tpl', title='Warning', message_type='warning', message=msg)
+            return template('errors', title='Warning', message_type='warning', message=msg)
         # If all is OK, refresh blog
         t = Thread(group=None, target=hymby.engine.refresh, name=None, args=(hymby, hymby.params.get('refresh_errors')))
         t.start()
@@ -207,7 +214,7 @@ def edit_item(name=False):
       # Read post content
       details = hymby.engine.get_item_metadata(hymby, name)
       content = hymby.engine.get_item_content(hymby, name, transformed=False)
-      return template('edit.tpl', name=name, title='Edition', forms=details, content=content)
+      return template('edit', name=name, title='Edition', forms=details, content=content)
 
 @hymby.route('/item/<name>')
 def item(name):
@@ -220,7 +227,7 @@ def item(name):
     # if no details, return to /items
     if not details:
         redirect('/items')
-    return template('single.tpl', identifier=name, content=hymby.engine.get_item_content(hymby, name, replacements=True), data=details, title=details.get('TITLE', ''))
+    return template('single', identifier=name, content=hymby.engine.get_item_content(hymby, name, replacements=True), data=details, title=details.get('TITLE', ''))
 @hymby.route('/delete/<name>')
 def delete_item(name):
     """
@@ -232,7 +239,7 @@ def delete_item(name):
     # if not details, post doesn't exist, return an error
     if not item_exists:
         msg = 'Post not found: %s' % (name or '')
-        return template('errors.tpl', title='Error', message_type='error', message=msg)
+        return template('errors', title='Error', message_type='error', message=msg)
     # otherwise delete items and return to item list
     result, msg = hymby.engine.delete_item(hymby, name)
     if result:
@@ -241,7 +248,7 @@ def delete_item(name):
         t.start()
         redirect('/items')
     else:
-        return template('errors.tpl', title='Error', message_type='error', message=msg)
+        return template('errors', title='Error', message_type='error', message=msg)
 
 @hymby.route('/help')
 def go_to_help():
@@ -267,7 +274,7 @@ def help(language='en'):
             content = mdwn.markdown(content.decode('utf-8'), extensions=['toc'])
         except ImportError as e:
             content = 'python-markdown module missing!'
-    return template('help.tpl', title='Help', content=content)
+    return template('help', title='Help', content=content)
 
 @hymby.route('/config')
 def config_page():
@@ -276,7 +283,7 @@ def config_page():
     """
     check_config()
     # TODO: Make an if/else to permit to write changes
-    return template('config.tpl', title='Configuration', config=hymby.params, engine_config=hymby.engine.get_config(hymby))
+    return template('config', title='Configuration', config=hymby.params, engine_config=hymby.engine.get_config(hymby))
 
 # STATIC routes
 @hymby.route('/static/<filename:path>')
@@ -300,7 +307,7 @@ def error404(error='', error_type='none'):
     '''
     Default 404 page.
     '''
-    return template('404.tpl', message=error, message_type=error_type)
+    return template('404', message=error, message_type=error_type)
 
 # SPECIAL routes
 hymby.route('/install', ['GET', 'POST'], install)
