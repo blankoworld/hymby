@@ -335,8 +335,9 @@ def config_page():
         reset_config(conf)
         return template('config', title='Configuration', message_type='success', message='General configuration updated.', config=hymby.params, engine_config=hymby.engine.get_config(hymby))
     elif request.POST.get('save_engine'):
-        # TODO: Save engine specific configuration via hymby.engine.set_config(VALUES)
-        pass
+        r = request.POST
+        hymby.engine.set_config(hymby, dict(r))
+        return template('config', title='Configuration', message_type='success', message='%s configuration updated.' % hymby.params.get('general.engine', ''), config=hymby.params, engine_config=hymby.engine.get_config(hymby))
     else:
         return template('config', title='Configuration', config=hymby.params, engine_config=hymby.engine.get_config(hymby), message='', message_type='none')
 

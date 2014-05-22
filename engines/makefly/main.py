@@ -18,6 +18,7 @@ from itertools import islice
 import logging
 from time import sleep
 
+MAKEFLY_CONFIGRC = 'makefly.rc'
 MAKEFLY_DBFILE_REGEX = recompile('(?P<timestamp>\d+),(?P<basename>.*)(?P<extension>\.mk)')
 MAKEFLY_POST_LIMIT = 15
 
@@ -142,6 +143,26 @@ def get_config(self):
             field, content = line.split('=')
             res[field.strip()] = content.strip()
     return res
+
+def set_config(self, data={}):
+    """
+    Write configuration.
+    """
+    # do nothing if no data or no configuration file found
+    configpath = '/'.join([self.params.get('general.path'), MAKEFLY_CONFIGRC])
+    if not data or not path.exists(configpath):
+        return False
+    # Open old values
+    conf = get_config(self)
+    for field in data:
+        if field != 'save_engine':
+            conf.update({field: data[field]})
+    # Write values
+    with open(configpath, 'w') as configfile:
+        for element in conf:
+            configfile.write('%s = %s\n' % (element, conf[element]))
+        configfile.close()
+    return True
 
 def get_title(self):
     """
