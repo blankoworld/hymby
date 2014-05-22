@@ -160,6 +160,15 @@ section#error {
   background-color: #ffdfdf;
   color: #494949;
 }
+
+.success {
+  width: 98%;
+  padding: 1%;
+  margin: 1.7% auto;
+  background-color: #eafce9;
+  color: #494949;
+}
+
 article {
   margin: 0 0 1.7% 0;
   padding: 0 0 0 0;
