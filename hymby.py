@@ -127,6 +127,15 @@ def install(message='', message_type='normal'):
             installed = True
         return template('install', installed=installed, message=message, message_type=message_type)
 
+def refresh():
+    """
+    Do blog recompilation.
+    """
+    # Use a thread to permit user to continue to use the weblog management system
+    t = Thread(group=None, target=hymby.engine.refresh, name=None, args=(hymby, hymby.params.get('refresh_errors')))
+    t.start()
+    return True
+
 @hymby.route('/')
 def homepage():
     """
@@ -176,8 +185,7 @@ def new_item():
         if not pid:
             return template('errors', title='Warning', message_type='warning', message=msg)
         # If all is OK, refresh blog
-        t = Thread(group=None, target=hymby.engine.refresh, name=None, args=(hymby, hymby.params.get('refresh_errors')))
-        t.start()
+        refresh()
         redirect('/item/%s' % pid)
     else:
       return template('new_post', name='New post', title='Add a new post')
@@ -216,8 +224,7 @@ def edit_item(name=False):
         if not res:
             return template('errors', title='Warning', message_type='warning', message=msg)
         # If all is OK, refresh blog
-        t = Thread(group=None, target=hymby.engine.refresh, name=None, args=(hymby, hymby.params.get('refresh_errors')))
-        t.start()
+        refresh()
         redirect('/item/%s' % name)
     else:
       # Read post content
@@ -254,8 +261,7 @@ def delete_item(name):
     result, msg = hymby.engine.delete_item(hymby, name)
     if result:
         # If all is OK, refresh blog
-        t = Thread(group=None, target=hymby.engine.refresh, name=None, args=(hymby, hymby.params.get('refresh_errors')))
-        t.start()
+        refresh()
         redirect('/items')
     else:
         return template('errors', title='Error', message_type='error', message=msg)
@@ -333,10 +339,12 @@ def config_page():
             value = r[field]
             conf.update('general', {field: value})
         reset_config(conf)
+        refresh()
         return template('config', title='Configuration', message_type='success', message='General configuration updated.', config=hymby.params, engine_config=hymby.engine.get_config(hymby))
     elif request.POST.get('save_engine'):
         r = request.POST
         hymby.engine.set_config(hymby, dict(r))
+        refresh()
         return template('config', title='Configuration', message_type='success', message='%s configuration updated.' % hymby.params.get('general.engine', ''), config=hymby.params, engine_config=hymby.engine.get_config(hymby))
     else:
         return template('config', title='Configuration', config=hymby.params, engine_config=hymby.engine.get_config(hymby), message='', message_type='none')
