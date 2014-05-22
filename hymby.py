@@ -23,6 +23,15 @@ from os import listdir
 from os import path
 from threading import Thread
 
+import sys
+py   = sys.version_info
+py3k = py >= (3, 0, 0)
+
+if py3k:
+    from configparser import ConfigParser
+else:
+    from ConfigParser import SafeConfigParser as ConfigParser
+
 # Create Hymby's application
 hymby = application = Bottle()
 
@@ -281,7 +290,30 @@ def help(language='en'):
             content = 'python-markdown module missing!'
     return template('help', title='Help', content=content)
 
-@hymby.route('/config')
+def reset_config(configdict):
+    """
+    Write configdict content to the default configuration file.
+    """
+    # Prepare some values
+    sections = []
+    Config = ConfigParser()
+    filename = hymby.params['filename']
+    for field in configdict:
+        value = configdict[field]
+        sectioninfo = field.split('.')
+        section = sectioninfo and sectioninfo[0] or False
+        param = sectioninfo and sectioninfo[1] or False
+        if section and param:
+            if section not in sections:
+              sections.append(section)
+              Config.add_section(section)
+            Config.set(section, param, value)
+            hymby.params.update({field: value})
+    with open(filename, 'w') as configfile:
+        Config.write(configfile)
+        configfile.close()
+    return True
+
 def config_page():
     """
     Display general configuration.
@@ -289,8 +321,24 @@ def config_page():
     Allow to change values.
     """
     check_config()
-    # TODO: Make an if/else to permit to write changes
-    return template('config', title='Configuration', config=hymby.params, engine_config=hymby.engine.get_config(hymby))
+    if request.POST.get('save', '').strip():
+        r = request.POST
+        config_filename = hymby.params['filename']
+        # Write changes using an ugly method: Get current config, and update it with form values. Then write all in the config.
+        conf = ConfigDict().load_config(config_filename)
+        for field in dict(r):
+            # do not take save button value
+            if field == 'save':
+                continue
+            value = r[field]
+            conf.update('general', {field: value})
+        reset_config(conf)
+        return template('config', title='Configuration', message_type='success', message='General configuration updated.', config=hymby.params, engine_config=hymby.engine.get_config(hymby))
+    elif request.POST.get('save_engine'):
+        # TODO: Save engine specific configuration via hymby.engine.set_config(VALUES)
+        pass
+    else:
+        return template('config', title='Configuration', config=hymby.params, engine_config=hymby.engine.get_config(hymby), message='', message_type='none')
 
 #####
 ## STATIC routes
@@ -335,6 +383,7 @@ def error404(error='', error_type='none'):
 hymby.route('/install', ['GET', 'POST'], install)
 hymby.route('/items/new', ['GET', 'POST'], new_item)
 hymby.route('/edit/<name>', ['GET', 'POST'], edit_item)
+hymby.route('/config', ['GET', 'POST'], config_page)
 
 #####
 ## MAIN

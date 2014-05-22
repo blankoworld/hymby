@@ -1,4 +1,5 @@
 % include('header.tpl', title=title)
+<p class="{{ message_type }}">{{ message }}</p>
 <article>
   <header>
     <h1>General</h1>
