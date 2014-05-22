@@ -327,6 +327,10 @@ def config_page():
     Allow to change values.
     """
     check_config()
+    message = ''
+    message_type = 'none'
+    config = hymby.params
+    engine_config = hymby.engine.get_config(hymby)
     if request.POST.get('save', '').strip():
         r = request.POST
         config_filename = hymby.params['filename']
@@ -340,14 +344,17 @@ def config_page():
             conf.update('general', {field: value})
         reset_config(conf)
         refresh()
-        return template('config', title='Configuration', message_type='success', message='General configuration updated.', config=hymby.params, engine_config=hymby.engine.get_config(hymby))
+        message = 'General configuration updated.'
+        message_type = 'success'
+        config = hymby.params # needed as we update it
     elif request.POST.get('save_engine'):
         r = request.POST
         hymby.engine.set_config(hymby, dict(r))
         refresh()
-        return template('config', title='Configuration', message_type='success', message='%s configuration updated.' % hymby.params.get('general.engine', ''), config=hymby.params, engine_config=hymby.engine.get_config(hymby))
-    else:
-        return template('config', title='Configuration', config=hymby.params, engine_config=hymby.engine.get_config(hymby), message='', message_type='none')
+        message = '%s Configuration updated.' % hymby.params.get('general.engine', '')
+        message_type = 'success'
+        engine_config = hymby.engine.get_config(hymby) # needed as we update it
+    return template('config', title='Configuration', config=config, engine_config=engine_config, message=message, message_type=message_type)
 
 #####
 ## STATIC routes
