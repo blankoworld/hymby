@@ -380,7 +380,7 @@ def send_static_engine(filename):
     """
     check_config()
     engine = hymby.params.get('general.engine')
-    static_path = '/'.join([hymby.params.get('general.path', ''), hymby.params.get(engine + 'static_directory', '')])
+    static_path = '/'.join([hymby.params.get('general.path', ''), hymby.params.get(engine + '.static_directory', '')])
     return static_file(filename, root=static_path)
 
 #####
