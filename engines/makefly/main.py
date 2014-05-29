@@ -268,7 +268,10 @@ def new_item(self, data, content):
         return False, 'No data specified'
     # Prepare some values
     message = ''
-    metafiles_path = '/'.join([self.params.get('general.path', ''), self.params.get('makefly.db_directory', '')]) + '/'
+    blog_path = self.params.get('general.path', '')
+    db_path = '/'.join([blog_path, self.params.get('makefly.db_directory', '')])
+    metafiles_path = db_path + '/'
+    src_path = '/'.join([blog_path, self.params.get('makefly.src_directory', '')])
     title = data.get('NAME', False)
     description = data.get('DESCRIPTION', False)
     ptype = data.get('TYPE', False)
@@ -281,7 +284,7 @@ def new_item(self, data, content):
     if not title:
         return False, 'No title specified!'
     # Create the new post
-    p = Popen(["./hosted_engine/tools/create_post.sh", "-q"], stdin=PIPE, stdout=PIPE, env={"DBDIR": "./hosted_engine/db", "SRCDIR": "./hosted_engine/src"})
+    p = Popen(["%s/tools/create_post.sh" % (blog_path), "-q"], stdin=PIPE, stdout=PIPE, env={"DBDIR": db_path, "SRCDIR": src_path})
     try:
         stdout = p.communicate(input="%s\n%s\n%s\n%s\n%s\n%s\n" % (author or 'Unknown', title, description or ' ', tags or ' ', ptype or 'normal', keyword or 'unknown'))
     except Exception as e:
