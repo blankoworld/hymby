@@ -308,7 +308,7 @@ def new_item(self, data, content):
     self.DBFILES.append(db_filename)
     return db_filename, message
 
-def edit_item(self, identifier, data=False):
+def edit_item(self, identifier, data={}):
     """
     Modify given post (<identifier>).
     """
