@@ -273,7 +273,7 @@ def new_item(self, data, content):
     # Create the new post
     p = Popen(["%s/tools/create_post.sh" % (blog_path), "-q"], stdin=PIPE, stdout=PIPE, env={"DBDIR": db_path, "SRCDIR": src_path})
     try:
-        stdout = p.communicate(input="%s\n%s\n%s\n%s\n%s\n%s\n" % (author or 'Unknown', title, description or ' ', tags or ' ', ptype or 'normal', keyword or 'unknown'))
+        stdout = p.communicate(input="%s\n%s\n%s\n%s\n%s\n%s\n" % (author or 'Unknown', title, description or ' ', tags or 'news', ptype or 'normal', keyword or 'unknown'))
     except Exception as e:
         return False, e
     # Check result
