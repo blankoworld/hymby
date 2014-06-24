@@ -100,32 +100,19 @@ def refresh(self, errorfile):
     #+ We have to wait 1 second before refreshing.
     sleep(1)
     # Prepare some values
-    env = environ
-    env.update({'conf': 'makefly.rc'})
-    env.update({'MAKEOBJDIR': './'})
     blogdir = self.params.get('general.path')
     logging.basicConfig(filename=errorfile, format=logging.BASIC_FORMAT)
-    clean = Popen(['pmake', 'clean', '-f', 'Makefile'], stdout=PIPE, stderr=PIPE, env=env, cwd=blogdir)
-    generation = Popen(['pmake', '-f', 'Makefile'], stdout=PIPE, stderr=PIPE, env=env, cwd=blogdir)
+    generation = Popen(['lua', 'makefly', 'refresh'], stdout=PIPE, stderr=PIPE, cwd=blogdir)
     # Launch clean up then generation
     stdout = ()
-    stdout2 = ()
     try:
-        stdout = clean.communicate()
+        stdout = generation.communicate()
     except Exception as e:
-        logging.exception("Popen clean up error")
-        return False, e
-    try:
-        stdout2 = generation.communicate()
-    except Exception as e:
-        logging.exception("Popen generation error")
+        logging.exception("Popen refresh error")
         return False, e
     if stdout and len(stdout) > 1 and stdout[1]:
         logging.error(stdout[1])
-        return False, 'Blog clean up failed!'
-    if stdout2 and len(stdout2) > 1 and stdout2[1]:
-        logging.error(stdout2[1])
-        return False, 'Blog generation failed!'
+        return False, 'Blog refresh failed!'
     return True
 
 def get_config(self):
