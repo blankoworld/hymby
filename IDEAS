@@ -11,3 +11,7 @@ For an example:
  * Use four thread in nginx on tornado to give a good response
 
 Cf. http://casbon.me/what-will-pypy-do-for-your-website-benchmarki for benchmarking results.
+
+# Similar tools
+
+  * https://projects.gnome.org/gnome-blog/
